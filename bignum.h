@@ -7,7 +7,7 @@ class bignum
 {
   private:
     unsigned short *digits;
-    int precision;
+    unsigned short precision;
     //...
   public:
     //...
