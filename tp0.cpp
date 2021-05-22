@@ -4,7 +4,7 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
   bignum resultado;
-//hola probandOooooo
+
   for (size_t i = 1; i < argc; i++)
   {
     if(argv[i]=="-p")
