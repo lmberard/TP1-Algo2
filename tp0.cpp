@@ -1,4 +1,5 @@
 #include<iostream>
+#include<string>
 #include "bignum.h"
 using namespace std;
 

@@ -3,25 +3,56 @@
 
 friend bignum::bignum()
 {
-  digits= new unsigned short[1];
-
+  precision = 10;
+  digits = new unsigned short[precision];
 }
-// bignum a = 1243134;
-// a= 12315234;
+// bignum a;
 
-friend bignum::bignum(unsigned char a)//Le paso 234, lo convierte a bignum
+friend bignum::bignum(unsigned char a)
+{
+  precision = a;
+  digits = new unsigned short[precision];
+}
+friend bignum::bignum(int a)
 {
 
 }
-friend bignum::bignum(string a)
+friend bignum::bignum(string str)
 {
+  //pones signo
+  if(str[0]=='-')
+  {
+    signo=False;
+    precision=length(str)-1;
+    digits=new unsigned short[precision];
+  }
+  else
+  {
+    //pasas el nro a bignum
+    signo=True;
+    precision=length(str);
+    digits=new unsigned short[precision];
+  }
+  for(i=0;i<precision;i++)
+  {
+    digits[precision-1-i]=str[precision-1-i];
+  }
 
 }
+
 friend bignum::~bignum()
 {
-
+  if(digits)
+  {delete[] digits;}
 }
 
+friend bignum operator=(const int& nro)// bignum a = 123415;
+{
+  //destruyo a
+  // bignum resultado(nro);
+  // creo otro bignum con el creador al que le pasas la precision
+  // return resultado;
+}
 friend bignum operator+(const bignum& a, const bignum& b)
 {
   bignum result;
