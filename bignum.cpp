@@ -9,7 +9,13 @@ bignum::bignum()
   precision = 10;
   digits = new unsigned short[precision];
 }
+<<<<<<< HEAD
 // bignum a; hola puto
+=======
+
+// bignum a; hola amor
+
+>>>>>>> a0da710585941edcc036bdf8b0f9b347577f6490
 
 bignum::bignum(const unsigned short a)
 {
