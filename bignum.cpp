@@ -8,7 +8,7 @@ bignum::bignum()
   precision = 10;
   digits = new unsigned short[precision];
 }
-// bignum a; eeee putoooooovfdsggfds
+// bignum a; hola amor 
 
 bignum::bignum(const unsigned short a)
 {
