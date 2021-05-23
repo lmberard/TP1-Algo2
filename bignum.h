@@ -5,6 +5,8 @@ using namespace std;
 #ifndef BIGNUM_INCLUDED
 #define BIGNUM_INCLUDED
 
+#define ASCII_FIX 48
+
 class bignum
 {
   private:
@@ -19,7 +21,7 @@ class bignum
     bignum(const unsigned short);
     bignum(const string&);
     ~bignum();
-    //friend void set_p();
+    void set_p(unsigned short);
     unsigned short get_p();
     //friend void set_len();
     //friend unsigned char get_len();
