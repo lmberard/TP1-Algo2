@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string>
+using namespace std;
 
 #ifndef BIGNUM_INCLUDED
 #define BIGNUM_INCLUDED
@@ -14,22 +15,22 @@ class bignum
     //...
   public:
     //...
-    friend bignum();
-    friend bignum(unsigned short);
-    friend bignum(string);
-    friend ~bignum();
-    friend void set_p();
-    friend unsigned char get_p();
-    friend void set_len();
-    friend unsigned char get_len();
-    friend bignum to_bignum(int);
+    bignum();
+    bignum(const unsigned short);
+    bignum(const string&);
+    ~bignum();
+    //friend void set_p();
+    //friend unsigned char get_p();
+    //friend void set_len();
+    //friend unsigned char get_len();
+    //friend bignum to_bignum(int);
 
     friend bignum operator+(const bignum&, const bignum&);
     friend bignum operator-(const bignum&, const bignum&);
     friend bignum operator*(const bignum&, const bignum&);
-    friend bignum operator=(const bignum&);
-    friend bignum operator=(const int&);
-    friend bignum operator=(const string&);
+    const bignum operator=(const bignum&);
+    const bignum operator=(const int&);
+    const bignum operator=(const string&);
     friend std::ostream& operator<<(std::ostream&, const bignum&);
     friend std::istream& operator>>(std::istream&, bignum&);
 };

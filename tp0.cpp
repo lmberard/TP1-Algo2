@@ -6,18 +6,18 @@ using namespace std;
 int main(int argc, char const *argv[]) {
   bignum resultado;
 
-  for (size_t i = 1; i < argc; i++)
+  /*for (size_t i = 1; i < argc; i++)
   {
     if(argv[i]=="-p")
     {
-      resultado.set_p(argv[i+1]);
+      //resultado.set_p(argv[i+1]);
       //seteo la precisión en argv[i+1]
       //break;
     }
     if(tiene_char(argv[i],'*'))
     {
 
-      cout << a*b << endl;
+      //cout << a*b << endl;
     }
 
     if(tiene_char(argv[i],'+')
@@ -26,7 +26,7 @@ int main(int argc, char const *argv[]) {
       bignum b=argv[i+1];
       cout << a+b << endl;
     }
-  }
+  }*/
 
 
   return 0;
