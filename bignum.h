@@ -20,7 +20,7 @@ class bignum
     bignum(const string&);
     ~bignum();
     //friend void set_p();
-    //friend unsigned char get_p();
+    unsigned short get_p();
     //friend void set_len();
     //friend unsigned char get_len();
     //friend bignum to_bignum(int);

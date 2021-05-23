@@ -1,32 +1,42 @@
-#include<iostream>
-#include<string>
+#include <iostream>
+#include <string>
+#include <cstring>
+
 #include "bignum.h"
+
 using namespace std;
 
 int main(int argc, char const *argv[]) {
-  bignum resultado;
 
-  /*for (size_t i = 1; i < argc; i++)
+  bignum resultado;
+  bignum a;
+  bignum b("-132135841615231655");
+  cout << b.get_p() << endl;
+
+
+  cout << b << endl;
+
+  for (size_t i = 1; i < argc; i++)
   {
-    if(argv[i]=="-p")
+    if(!strcmp(argv[i],"-p") || !strcmp(argv[i],"-precision"))
     {
       //resultado.set_p(argv[i+1]);
       //seteo la precisión en argv[i+1]
-      //break;
+      //continue;
     }
-    if(tiene_char(argv[i],'*'))
+    /*if(tiene_char(argv[i],'*')||)
     {
 
       //cout << a*b << endl;
-    }
-
-    if(tiene_char(argv[i],'+')
+    }*/
+    string str=argv[i];
+    if(str.find('+')!=string::npos)
     {
-      bignum a=argv[i-1];
-      bignum b=argv[i+1];
+      int a=stoi(argv[i-1]);
+      int b=stoi(argv[i+1]);
       cout << a+b << endl;
     }
-  }*/
+  }
 
 
   return 0;
