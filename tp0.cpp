@@ -9,11 +9,12 @@ using namespace std;
 int main(int argc, char const *argv[]) {
 
   bignum resultado;
+
+  //testeo
   bignum a;
-  bignum b("-132135841615231655");
+  string str = "-00000123 4";
+  bignum b(str);
   cout << b.get_p() << endl;
-
-
   cout << b << endl;
 
   for (size_t i = 1; i < argc; i++)

@@ -1,5 +1,6 @@
 #include "bignum.h"
 #include <string>
+#include <algorithm>
 using namespace std;
 
 bignum::bignum()
@@ -8,7 +9,9 @@ bignum::bignum()
   precision = 10;
   digits = new unsigned short[precision];
 }
-// bignum a; hola amor 
+
+// bignum a; hola amor
+
 
 bignum::bignum(const unsigned short a)
 {
@@ -17,33 +20,38 @@ bignum::bignum(const unsigned short a)
   digits = new unsigned short[precision];
 }
 
-bignum::bignum(const string &str)
+bignum::bignum(const string &str1)
 {
-  //pones signo
+  //Saco los espacios en blanco.
+  string str;
+  for(char c:str1) if(!isspace(c)) str += c ;
+  //Defino el signo.
   if(str[0]=='-')
   {
     signo=false;
     precision=str.length()-1;
-  }
-  else
+  } else
   {
-    //pasas el nro a bignum
     signo=true;
     precision=str.length();
   }
+  //Creo el arreglo de shorts
   digits=new unsigned short[precision];
   for(size_t i=0;i<precision;i++)
   {
-    digits[precision-1-i]=(short)str[precision-1-i];
-    cout << digits[precision-1-i] << endl;
+    digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
   }
-
 }
 
 bignum::~bignum()
 {
   if(digits)
   {delete[] digits;}
+}
+
+void bignum::set_p(unsigned short a)
+{
+  precision=a;
 }
 
 unsigned short bignum::get_p()
@@ -71,20 +79,34 @@ const bignum bignum::operator=(const bignum& right)
     else
     {
       for(int i=0; i<precision; i++)digits[i]=right.digits[i];
-      return *this; //al retornar una referencia perimite x=y=z;
+      return *this;
     }
   }
   return *this;
 }
-const bignum bignum::operator=(const int &right)
-{// bignum a = 123415;
-  //destruyo a
-  // bignum resultado(nro);
-  // creo otro bignum con el creador al que le pasas la precision
-  // return resultado;
-  bignum a;
-  return a;
-}
+
+/*const bignum bignum::operator=(const string& right)
+{
+  if(right[0]=='-'){signo=false;}
+  if(precision!=right.precision)
+  {
+    unsigned short *aux;
+    aux=new unsigned short[right.precision];
+    delete[]digits;
+    precision=right.precision;
+    digits=aux;
+    for(int i=0; i<precision; i++)
+      {digits[i]=right.digits[i];}
+    return *this;
+  }
+  else
+  {
+    for(int i=0; i<precision; i++)digits[i]=right.digits[i];
+    return *this;
+  }
+}*/
+
+
 bignum operator+(const bignum& a, const bignum& b)
 {
   bignum result;
@@ -101,9 +123,14 @@ std::ostream& operator<<(std::ostream& os, const bignum& num)
 {
   if(num.signo==false)
   { os << '-'; }
+  bool aux= false;
   for(size_t i = 0; i< num.precision;i++)
   {
+    //saco los ceros de la izquierda
+    if(num.digits[i]==0 && aux==true)
+    {continue;}
     os << num.digits[i];
+    aux=true;
   }
   return os;
 }
