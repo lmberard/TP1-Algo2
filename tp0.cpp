@@ -11,11 +11,13 @@ int main(int argc, char const *argv[]) {
   bignum resultado;
 
   //testeo
-  bignum a;
-  string str = "-00000123 4";
+  string stra="546";
+  bignum a=stra;
+  string str = "-500";
   bignum b(str);
-  cout << b.get_p() << endl;
-  cout << b << endl;
+  bignum c = a+b;
+  cout << a << endl;
+
 
   for (size_t i = 1; i < argc; i++)
   {

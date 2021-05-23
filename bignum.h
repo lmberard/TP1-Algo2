@@ -31,7 +31,6 @@ class bignum
     friend bignum operator-(const bignum&, const bignum&);
     friend bignum operator*(const bignum&, const bignum&);
     const bignum operator=(const bignum&);
-    const bignum operator=(const int&);
     const bignum operator=(const string&);
     friend std::ostream& operator<<(std::ostream&, const bignum&);
     friend std::istream& operator>>(std::istream&, bignum&);
