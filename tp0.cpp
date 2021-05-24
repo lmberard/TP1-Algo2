@@ -11,12 +11,13 @@ int main(int argc, char const *argv[]) {
   bignum resultado;
 
   //testeo
-  string stra="546";
+  string stra="-546";
   bignum a=stra;
-  string str = "-500";
-  bignum b(str);
-  bignum c = a+b;
-  cout << a << endl;
+  cout << a <<endl;
+  //string str = "-500";
+  //bignum b(str);
+//  bignum c = a+b;
+  //cout << b << endl;
 
 
   for (size_t i = 1; i < argc; i++)
@@ -27,11 +28,11 @@ int main(int argc, char const *argv[]) {
       //seteo la precisión en argv[i+1]
       //continue;
     }
-    /*if(tiene_char(argv[i],'*')||)
-    {
+    //if(tiene_char(argv[i],'*')||)
+    //{
 
       //cout << a*b << endl;
-    }*/
+    //}
     string str=argv[i];
     if(str.find('+')!=string::npos)
     {

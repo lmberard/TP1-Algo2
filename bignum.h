@@ -12,7 +12,7 @@ class bignum
   private:
     unsigned short *digits;
     unsigned short precision;
-    unsigned short len;
+    //unsigned short len;
     bool signo; //True sea positivo y False sea Negativo
     //...
   public:
@@ -31,7 +31,7 @@ class bignum
     friend bignum operator-(const bignum&, const bignum&);
     friend bignum operator*(const bignum&, const bignum&);
     const bignum operator=(const bignum&);
-    const bignum operator=(const string&);
+    const bignum& operator=(const string&);
     friend std::ostream& operator<<(std::ostream&, const bignum&);
     friend std::istream& operator>>(std::istream&, bignum&);
 };

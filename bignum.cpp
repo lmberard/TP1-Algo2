@@ -8,20 +8,19 @@ bignum::bignum()
   signo = true;
   precision = 10;
   digits = new unsigned short[precision];
+
+  for(size_t i=0;i<precision;i++)
+  {digits[i]=0;}
 }
-<<<<<<< HEAD
-// bignum a; hola puto
-=======
 
-// bignum a; hola amor
-
->>>>>>> a0da710585941edcc036bdf8b0f9b347577f6490
 
 bignum::bignum(const unsigned short a)
 {
   signo = true;
   precision = a;
   digits = new unsigned short[precision];
+  for(size_t i=0;i<precision;i++)
+  {digits[i]=0;}
 }
 
 bignum::bignum(const string &str1)
@@ -89,107 +88,36 @@ const bignum bignum::operator=(const bignum& right)
   return *this;
 }
 
-const bignum bignum::operator=(const string& right)
+const bignum& bignum::operator=(const string& right)
 {
-  if(right[0]=='-'){signo=false;}
-  if(precision!=right.length())
+  string str;
+  for(char c:right) if(!isspace(c)) str += c ;
+
+  if(str[0]=='-'){signo=false;}
+  if(precision!=str.length())
   {
     unsigned short *aux;
-    aux=new unsigned short[right.length()];
+    aux=new unsigned short[str.length()-!signo];
     delete[]digits;
-    precision=right.length();
+    precision=str.length()-!signo;
     digits=aux;
     for(int i=0; i<precision; i++)
-      {digits[precision-1-i]=right[precision-signo-i]-ASCII_FIX;}
+    {
+      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+      cout<<digits[precision-1-i]<<endl;
+    }
     return *this;
-  }
-  else
+  }else
   {
     for(int i=0; i<precision; i++)
-    {digits[precision-1-i]=right[precision-signo-i]-ASCII_FIX;}
+    {digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;}
     return *this;
   }
 }
 
 
-//tomo resta como una suma pero de numeros negativos?
-//-a - b = -(a+b)
-// a - b =  a +(-b)
 
-bignum operator+(const bignum& a, const bignum& b)
-{
 
-  unsigned short precision = max(a.precision,b.precision);
-  unsigned short carry = 0, aux = 0;
-  bignum result(precision + 1);//como mucho el resultado va a tener un valor extra 9999+999= 5 de precision
-
-  //suponiendo que ambos valores a y b son positivos, sino seria una resta
-  //verificar y de ultima mandarlo a la funcion con -?
-  /*
-  EJEMPLO:a+(-b) ó (-a)+b
-  if(!a.signo || !b.signo)
-    result = a-b;
-
-  EJEMPLO AMBOS NEGATIVOS: -a-b = -(a+b)
-  if(!a.signo && !b.signo)
-    result = a+b;
-    result.signo= false;
-  */
-
-  for(unsigned int i = precision - 1; i >= 0; i--){//recorro de atras para adelante
-
-    aux = a.digits[i];
-    aux = aux + b.digits[i] + carry;
-
-    //verifico el carry
-    if(aux >= 10){
-      aux -= 10;
-      carry = 1;
-    }
-    else carry = 0;
-
-    //si llego al principio, tengo que poner los dos numeros:
-    if(i!= 0){
-      result.digits[i+1] = aux;
-    }
-    else{
-      result.digits[i+1] = aux;
-      result.digits[i] = carry;
-
-    }
-  }
-  return result;
-}
-
-//suponiendo la funcion a - b
-bignum operator-(const bignum& a, const bignum& b)
-{
-  unsigned short precision = max(a.precision,b.precision);
-  unsigned short resta = 0, aux = 0;
-  bignum result(precision);
-
-  //chequear esto
-  if(a.digits[0] < b.digits[0]){
-    result.signo = false;
-  }
-
-  for(unsigned int i = precision - 1; i >= 0; i--){
-
-    aux = a.digits[i] - resta;
-    if(aux < b.digits[i]){
-      aux += 10;
-      resta = 1;
-    }
-    else {
-      resta = 0;
-    }
-
-    aux -= b.digits[i];
-    result.digits[i] = aux;
-  }
-
-  return result;
-}
 
 std::ostream& operator<<(std::ostream& os, const bignum& num)
 {
