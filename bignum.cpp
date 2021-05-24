@@ -159,6 +159,65 @@ bignum operator+(const bignum& a, const bignum& b)
   return result;
 }
 
+bignum operator-(const bignum& a, const bignum& b)
+{
+  unsigned short cant = max(a.precision,b.precision); 
+  unsigned short resto = 0;
+  int aux = 0;
+  bignum result(cant); 
+  unsigned int i = 0, contador_a = 0, contador_b = 0;
+  unsigned int dif_a = 0, dif_b = 0;
+  
+  if(a.precision <= b.precision){
+    dif_a = cant - a.precision;
+    dif_b = 0;
+  }
+  else {
+    dif_b = cant - b.precision;
+    dif_a = 0;
+  }
+  
+  for(i = 0; i < cant; i++){
+
+    contador_a = cant - 1 - dif_a -i;
+    contador_b = cant - 1 - dif_b -i;
+
+    if(contador_a >= 0 && contador_b >=0){ // para evitar que ingrese a algo que no existe
+      aux = (int)a.digits[contador_a];
+      aux -= resto;
+
+      //verifico si tengo que "pedir" al de al lado 
+      if(aux < b.digits[contador_b]){
+        aux += 10;
+        resto = 1;
+      }
+      else resto = 0;
+
+      //resto
+      aux -= (int)b.digits[contador_b]; 
+      
+      if(aux <0){ 
+        result.signo=false; 
+        aux = aux - (aux*2); 
+      }
+
+      result.digits[cant-i-1] = aux;
+    }
+    else if(contador_a < 0 && contador_b >= 0 ){
+      result.digits[cant-i-1] = b.digits[contador_b];
+      result.signo = false;
+    }else if(contador_b < 0 && contador_a >= 0){
+      result.digits[cant-i-1] = a.digits[contador_a];
+      result.signo = true;
+    }
+
+    //cout << result.digits[cant-i-1] << endl;
+  }
+    //cout << result.digits[0] << endl;
+  return result;
+}
+
+
 ostream& operator<<(ostream& os, const bignum& num)
 {
   if(num.signo==false)
