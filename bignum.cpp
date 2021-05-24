@@ -104,15 +104,12 @@ const bignum& bignum::operator=(const string& right)
     precision=str.length()-!signo;
     digits=aux;
     for(int i=0; i<precision; i++)
-    {
       digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
-      cout<<digits[precision-1-i]<<endl;
-    }
     return *this;
   }else
   {
     for(int i=0; i<precision; i++)
-    {digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;}
+      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
     return *this;
   }
 }
@@ -161,7 +158,7 @@ bignum operator+(const bignum& a, const bignum& b)
   return result;
 }
 
-std::ostream& operator<<(std::ostream& os, const bignum& num)
+ostream& operator<<(ostream& os, const bignum& num)
 {
   if(num.signo==false)
   { os << '-'; }
@@ -175,4 +172,12 @@ std::ostream& operator<<(std::ostream& os, const bignum& num)
     aux=true;
   }
   return os;
+}
+
+istream& operator>>(istream& is, bignum& num)
+{
+  string s;
+  is >> s;
+  num = s;
+  return is;
 }

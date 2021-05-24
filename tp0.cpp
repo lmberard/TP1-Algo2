@@ -11,15 +11,14 @@ int main(int argc, char const *argv[]) {
   bignum resultado;
 
   //testeo
-  string stra="670";
-  bignum a=stra;
-  cout << a <<endl;
-  string str = "615";
-  bignum b(str);
-  cout << b << endl;
-  bignum c = a+b;
-  cout << "Resultado de la suma:" << endl;
-  cout << c << endl;
+  bignum a;
+  bignum b;
+  cout << "Ingrese el valor de a: "<< endl;
+  cin >> a;
+  cout << "Ingrese el valor de b: "<< endl;
+  cin >> b;
+  cout << "Resultado de la a+b:" << a+b <<endl;
+
 
 
   for (size_t i = 1; i < argc; i++)
