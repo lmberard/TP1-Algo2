@@ -115,9 +115,15 @@ const bignum& bignum::operator=(const string& right)
   }
 }
 
+bignum bignum::operator+(const bignum& a, const bignum& b)
+{
 
+}
 
+bignum bignum::operator-(const bignum& a, const bignum& b)
+{
 
+}
 
 std::ostream& operator<<(std::ostream& os, const bignum& num)
 {
