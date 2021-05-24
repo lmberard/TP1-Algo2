@@ -1,5 +1,5 @@
 
-  unsigned short cant = a.precision; //aca en realidad es la precision maxima =>max(a,b)
+  unsigned short cant = a.precision; //aca en realidad es la precision maxima =>max(a,b)->verificar
   unsigned short resto = 0, aux = 0;
   bignum result(cant); 
   unsigned int i = 0;
@@ -34,3 +34,22 @@
     //cout << result.digits[0] << endl;
   return result;
 }
+
+/*
+//testeo
+  string stra="146";
+  bignum a=stra;
+  cout << a <<endl;
+  string str = "137";
+  bignum b(str);
+  cout << b << endl;
+  bignum c=a-b;
+  cout << "Ejemplo:" << endl;
+  cout << c << endl;
+  /*
+  unsigned short nro1 = 1, nro2 = 4;
+  unsigned short rta= nro1-nro2;
+  cout << rta << endl;*/
+
+
+*/
