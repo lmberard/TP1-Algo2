@@ -3,6 +3,7 @@
 #include <algorithm>
 using namespace std;
 
+//prueba comentario 
 bignum::bignum()
 {
   signo = true;
