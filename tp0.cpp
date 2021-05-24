@@ -12,12 +12,15 @@ int main(int argc, char const *argv[]) {
 
   //testeo
   bignum a;
-  bignum b;
-  cout << "Ingrese el valor de a: "<< endl;
-  cin >> a;
-  cout << "Ingrese el valor de b: "<< endl;
-  cin >> b;
-  cout << "Resultado de la a+b:" << a+b <<endl;
+  bignum b("6546");
+  string str = "45646s";
+  bignum c = str;
+  cout << c <<endl;
+  // cout << "Ingrese el valor de a: "<< endl;
+  // cin >> a;
+  // cout << "Ingrese el valor de b: "<< endl;
+  // cin >> b;
+  // cout << "Resultado de -a es " << -a <<endl;
 
 
 

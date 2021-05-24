@@ -17,7 +17,7 @@ class bignum
     //...
   public:
     //...
-    bignum();
+    bignum(void);
     bignum(const unsigned short);
     bignum(const string&);
     ~bignum();
@@ -30,9 +30,11 @@ class bignum
 
     friend bignum operator+(const bignum&, const bignum&);
     friend bignum operator-(const bignum&, const bignum&);
+    friend bignum operator-(const bignum&);
     friend bignum operator*(const bignum&, const bignum&);
-    const bignum operator=(const bignum&);
+    const bignum& operator=(const bignum&);
     const bignum& operator=(const string&);
+    const bignum& operator=(const char*&);
     friend std::ostream& operator<<(std::ostream&, const bignum&);
     friend std::istream& operator>>(std::istream&, bignum&);
 };

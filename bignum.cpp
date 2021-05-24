@@ -3,8 +3,8 @@
 #include <algorithm>
 using namespace std;
 
-//prueba comentario 
-bignum::bignum()
+
+bignum::bignum(void)
 {
   signo = true;
   precision = 10;
@@ -26,9 +26,17 @@ bignum::bignum(const unsigned short a)
 
 bignum::bignum(const string &str1)
 {
+
   //Saco los espacios en blanco.
   string str;
   for(char c:str1) if(!isspace(c)) str += c ;
+
+  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
+  {
+    cout<<"Asignacion de numero invalida"<<endl;
+    exit(1);
+  }
+
   //Defino el signo.
   if(str[0]=='-')
   {
@@ -66,7 +74,7 @@ void bignum::set_signo(bool s){
   signo=s;
 }
 
-const bignum bignum::operator=(const bignum& right)
+const bignum& bignum::operator=(const bignum& right)
 {
   if(&right !=this)
   {
@@ -95,7 +103,40 @@ const bignum& bignum::operator=(const string& right)
 {
   string str;
   for(char c:right) if(!isspace(c)) str += c ;
+  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
+  {
+    cout<<"Asignacion de numero invalida"<<endl;
+    exit(1);
+  }
+  if(str[0]=='-'){signo=false;}
+  if(precision!=str.length())
+  {
+    unsigned short *aux;
+    aux=new unsigned short[str.length()-!signo];
+    delete[]digits;
+    precision=str.length()-!signo;
+    digits=aux;
+    for(int i=0; i<precision; i++)
+      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+    return *this;
+  }else
+  {
+    for(int i=0; i<precision; i++)
+      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+    return *this;
+  }
+}
+const bignum& bignum::operator=(const char*& right)
+{
+  string str;
+  string s = right;
+  for(char c:s) if(!isspace(c)) str += c ;
 
+  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
+  {
+    cout<<"Asignacion de numero invalida"<<endl;
+    exit(1);
+  }
   if(str[0]=='-'){signo=false;}
   if(precision!=str.length())
   {
@@ -121,12 +162,12 @@ bignum operator+(const bignum& a, const bignum& b)
   unsigned short m = b.precision;
   bignum result(max(n,m)+1);
   if(!a.signo && b.signo){
-    //a.set_signo(true);
-    //return b-a;
+    bignum c = -a;
+    return b-c;
   }
   if(a.signo && !b.signo){
-    //b.set_signo(true);
-    //return a-b;
+    bignum c = -a;
+    return a-c;
   }
   if(!a.signo && !b.signo){
     result.signo=false;
@@ -159,6 +200,23 @@ bignum operator+(const bignum& a, const bignum& b)
   return result;
 }
 
+bignum operator-(const bignum& a, const bignum& b)
+{
+  unsigned short n = a.precision;
+  unsigned short m = b.precision;
+  bignum result(max(n,m));
+  return result;
+}
+
+bignum operator-(const bignum& num)
+{
+  bignum result;
+  result.precision=num.precision;
+  result.signo=!num.signo;
+  result.digits=num.digits;
+  return result;
+}
+
 ostream& operator<<(ostream& os, const bignum& num)
 {
   if(num.signo==false)
@@ -179,6 +237,11 @@ istream& operator>>(istream& is, bignum& num)
 {
   string s;
   is >> s;
+  while(!(s.find_first_not_of( "0123456789" ) == string::npos) && (s[0]!='-' && s[0]!='+'))
+  {
+    cout << "El valor ingresado no es correcto. Intente nuevamente." << endl;
+    is >> s;
+  }
   num = s;
   return is;
 }
