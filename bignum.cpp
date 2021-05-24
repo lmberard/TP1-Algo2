@@ -61,7 +61,9 @@ unsigned short bignum::get_p()
 {
   return precision;
 }
-
+void bignum::set_signo(bool s){
+  signo=s;
+}
 
 const bignum bignum::operator=(const bignum& right)
 {
@@ -115,14 +117,48 @@ const bignum& bignum::operator=(const string& right)
   }
 }
 
-bignum bignum::operator+(const bignum& a, const bignum& b)
+bignum operator+(const bignum& a, const bignum& b)
 {
+  unsigned short n = a.precision;
+  unsigned short m = b.precision;
+  bignum result(max(n,m)+1);
+  if(!a.signo && b.signo){
+    //a.set_signo(true);
+    //return b-a;
+  }
+  if(a.signo && !b.signo){
+    //b.set_signo(true);
+    //return a-b;
+  }
+  if(!a.signo && !b.signo){
+    result.signo=false;
+  }
+  unsigned short carry = 0;
+  unsigned short aux = 0;
 
-}
+  for(size_t i=0; i< max(n,m)+1;i++){
 
-bignum bignum::operator-(const bignum& a, const bignum& b)
-{
+    if((short)(m-i-1)<0 && (short)(n-i-1)<0){
+      aux=carry;
+    } else if((short)(n-i-1)<0){
+      aux=b.digits[m-i-1]+carry;
+    } else if((short)(m-i-1)<0){
+      aux=a.digits[n-i-1]+carry;
+    } else {
+      aux=a.digits[n-i-1]+b.digits[m-i-1]+carry;
+    }
 
+    if(aux>=10){
+      aux-=10;
+      carry=1;
+    } else {
+      carry=0;
+    }
+    result.digits[max(n,m)-i]=aux;
+    result.digits[0] = aux;
+  }
+
+  return result;
 }
 
 std::ostream& operator<<(std::ostream& os, const bignum& num)

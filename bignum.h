@@ -23,6 +23,7 @@ class bignum
     ~bignum();
     void set_p(unsigned short);
     unsigned short get_p();
+    void set_signo(bool);
     //friend void set_len();
     //friend unsigned char get_len();
     //friend bignum to_bignum(int);
