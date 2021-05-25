@@ -25,6 +25,9 @@ int main(int argc, char const *argv[]) {
   cout << "Resultado de a-b es " << c <<endl;
   cout << "Resultado de a+b es " << a+b <<endl;
 
+  cout << "Resultado de a*b es " << a*b <<endl;
+
+
 
 
   for (size_t i = 1; i < argc; i++)
