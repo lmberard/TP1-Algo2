@@ -12,15 +12,17 @@ int main(int argc, char const *argv[]) {
 
   //testeo
   bignum a;
-  bignum b("6546");
-  string str = "45646s";
-  bignum c = str;
-  cout << c <<endl;
-  // cout << "Ingrese el valor de a: "<< endl;
-  // cin >> a;
-  // cout << "Ingrese el valor de b: "<< endl;
-  // cin >> b;
-  // cout << "Resultado de -a es " << -a <<endl;
+  bignum b;
+  cout << "Ingrese el valor de a: "<< endl;
+  cin >> a;
+  cout << "Ingrese el valor de b: "<< endl;
+  cin >> b;
+  if(a<b){cout<<"a es menor que b"<<endl;}
+  if(a>b){cout<<"a es mayor que b"<<endl;}
+  //if(a==b){cout << "a es igual a b" <<endl;}
+  bignum c;
+  c= a-b;
+  cout << "Resultado de a-b es " << c <<endl;
 
 
 

@@ -20,6 +20,7 @@ class bignum
     bignum(void);
     bignum(const unsigned short);
     bignum(const string&);
+
     ~bignum();
     void set_p(unsigned short);
     unsigned short get_p();
