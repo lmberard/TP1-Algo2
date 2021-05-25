@@ -327,7 +327,7 @@ ostream& operator<<(ostream& os, const bignum& num)
     //saco los ceros de la izquierda
     if(num.digits[i]==0 && aux==false)
     {
-      if(i==num.precision-1){
+      if(i==(num.precision-1)){
         os<<'0';
         return os;
       }
@@ -359,7 +359,6 @@ bignum operator*(const bignum& a, const bignum& b)
   unsigned short aux = 0;
   unsigned short n = a.precision;
   unsigned short m = b.precision;
-  unsigned short n_rtado = n+m;
   bignum result_aux(n+m), vacio(n+m);
   bignum result(n+m);
 
@@ -393,7 +392,7 @@ bignum operator*(const bignum& a, const bignum& b)
       }
 
       //guardo 
-      if(j = 0){
+      if(j == 0){
         result_aux.digits[i+j+1] = aux;
         result_aux.digits[i+j] = carry;
       }     
