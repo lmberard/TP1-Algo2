@@ -126,35 +126,6 @@ const bignum& bignum::operator=(const string& right)
     return *this;
   }
 }
-const bignum& bignum::operator=(const char*& right)
-{
-  string str;
-  string s = right;
-  for(char c:s) if(!isspace(c)) str += c ;
-
-  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
-  {
-    cout<<"Asignacion de numero invalida"<<endl;
-    exit(1);
-  }
-  if(str[0]=='-'){signo=false;}
-  if(precision!=str.length())
-  {
-    unsigned short *aux;
-    aux=new unsigned short[str.length()-!signo];
-    delete[]digits;
-    precision=str.length()-!signo;
-    digits=aux;
-    for(int i=0; i<precision; i++)
-      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
-    return *this;
-  }else
-  {
-    for(int i=0; i<precision; i++)
-      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
-    return *this;
-  }
-}
 
 bignum operator+(const bignum& a, const bignum& b)
 {
@@ -202,30 +173,13 @@ bignum operator+(const bignum& a, const bignum& b)
 
 bignum operator-(const bignum& a, const bignum& b)
 {
-<<<<<<< HEAD
-  unsigned short n = a.precision;
-  unsigned short m = b.precision;
-  bignum result(max(n,m));
-  return result;
-}
-
-bignum operator-(const bignum& num)
-{
-  bignum result;
-  result.precision=num.precision;
-  result.signo=!num.signo;
-  result.digits=num.digits;
-  return result;
-}
-
-=======
-  unsigned short cant = max(a.precision,b.precision); 
+  unsigned short cant = max(a.precision,b.precision);
   unsigned short resto = 0;
   int aux = 0;
-  bignum result(cant); 
+  bignum result(cant);
   unsigned int i = 0, contador_a = 0, contador_b = 0;
   unsigned int dif_a = 0, dif_b = 0;
-  
+
   if(a.precision <= b.precision){
     dif_a = cant - a.precision;
     dif_b = 0;
@@ -234,7 +188,7 @@ bignum operator-(const bignum& num)
     dif_b = cant - b.precision;
     dif_a = 0;
   }
-  
+
   for(i = 0; i < cant; i++){
 
     contador_a = cant - 1 - dif_a -i;
@@ -244,7 +198,7 @@ bignum operator-(const bignum& num)
       aux = (int)a.digits[contador_a];
       aux -= resto;
 
-      //verifico si tengo que "pedir" al de al lado 
+      //verifico si tengo que "pedir" al de al lado
       if(aux < b.digits[contador_b]){
         aux += 10;
         resto = 1;
@@ -252,11 +206,11 @@ bignum operator-(const bignum& num)
       else resto = 0;
 
       //resto
-      aux -= (int)b.digits[contador_b]; 
-      
-      if(aux <0){ 
-        result.signo=false; 
-        aux = aux - (aux*2); 
+      aux -= (int)b.digits[contador_b];
+
+      if(aux <0){
+        result.signo=false;
+        aux = aux - (aux*2);
       }
 
       result.digits[cant-i-1] = aux;
@@ -274,9 +228,15 @@ bignum operator-(const bignum& num)
     //cout << result.digits[0] << endl;
   return result;
 }
+bignum operator-(const bignum& num)
+{
+  bignum result;
+  result.precision=num.precision;
+  result.signo=!num.signo;
+  result.digits=num.digits;
+  return result;
+}
 
-
->>>>>>> 7c6870eeee1f87cb1ccda43a16b2b50fcba3be85
 ostream& operator<<(ostream& os, const bignum& num)
 {
   if(num.signo==false)
