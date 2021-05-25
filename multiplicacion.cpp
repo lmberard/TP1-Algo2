@@ -7,7 +7,6 @@ bignum operator*(const bignum& a, const bignum& b)
   unsigned short m = b.precision;
   unsigned short n_rtado = n+m;
   bignum result_aux1(n+1);
-  bignum result_aux2(n+1);
   bignum result(n_rtado);
 
   //signo
@@ -43,6 +42,9 @@ bignum operator*(const bignum& a, const bignum& b)
       //guardo 
       result_aux1.digits[n-j-1] = aux;
     }
+    
+    result + result_aux1;
   }
 
+  return result;
 }
