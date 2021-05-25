@@ -52,6 +52,7 @@ int main(int argc, char const *argv[]) {
     }
   }
 
+  cout << c << endl;
 
   return 0;
 }

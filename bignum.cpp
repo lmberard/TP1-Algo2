@@ -225,7 +225,9 @@ bignum operator-(const bignum& a, const bignum& b)
     return result;
   }
   if(!a.signo && !b.signo){
-    result = (-b)-a;
+    result = -b;
+    bignum c= -a;
+    result = result-c;
     return result;
   }
   if(a<b){
