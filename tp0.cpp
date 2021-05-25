@@ -18,6 +18,7 @@ int main(int argc, char const *argv[]) {
   cout << "Ingrese el valor de b: "<< endl;
   cin >> b;
   cout << "Resultado de la a+b:" << a+b <<endl;
+  cout << "Resultado de la a-b:" << a-b <<endl;
 
 
 

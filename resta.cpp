@@ -70,3 +70,27 @@ bignum operator-(const bignum& a, const bignum& b)
     //cout << result.digits[0] << endl;
   return result;
 }
+
+/*
+bool operator<(const bignum& a, const bignum& b)
+{
+  for(int i=0; i<min(a.precision,b.precision); i++>)
+  {
+    if(a.digits[i]>b.digits[i]){
+      return false;
+    }
+  }
+  return true;
+}
+
+bool operator>(const bignum& a, const bignum& b)
+{
+  for(int i=0; i<min(a.precision,b.precision); i++>)
+  {
+    if(a.digits[i]<b.digits[i]){
+      return false;
+    }
+  }
+  return true;
+}
+*/

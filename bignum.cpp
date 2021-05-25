@@ -165,7 +165,7 @@ bignum operator-(const bignum& a, const bignum& b)
   unsigned short resto = 0;
   int aux = 0;
   bignum result(cant); 
-  unsigned int i = 0, contador_a = 0, contador_b = 0;
+  int i = 0, contador_a = 0, contador_b = 0;
   unsigned int dif_a = 0, dif_b = 0;
   
   if(a.precision <= b.precision){
@@ -178,12 +178,15 @@ bignum operator-(const bignum& a, const bignum& b)
   }
   
   for(i = 0; i < cant; i++){
+    cout << "Iteracion nro" << i <<endl;
 
-    contador_a = cant - 1 - dif_a -i;
-    contador_b = cant - 1 - dif_b -i;
+    contador_a = cant - 1 - dif_a - i;
+    contador_b = cant - 1 - dif_b - i;
 
     if(contador_a >= 0 && contador_b >=0){ // para evitar que ingrese a algo que no existe
+      cout << "Digito" <<a.digits[contador_a] << endl;
       aux = (int)a.digits[contador_a];
+      cout << "Aux casteado:" << aux << endl;
       aux -= resto;
 
       //verifico si tengo que "pedir" al de al lado 
@@ -192,9 +195,12 @@ bignum operator-(const bignum& a, const bignum& b)
         resto = 1;
       }
       else resto = 0;
+      //cout << "aux" << aux <<endl;
+      //cout << "resto" << resto <<endl;
 
       //resto
       aux -= (int)b.digits[contador_b]; 
+      //cout << "Rtado final" << aux <<endl;
       
       if(aux <0){ 
         result.signo=false; 
@@ -203,13 +209,22 @@ bignum operator-(const bignum& a, const bignum& b)
 
       result.digits[cant-i-1] = aux;
     }
-    else if(contador_a < 0 && contador_b >= 0 ){
-      result.digits[cant-i-1] = b.digits[contador_b];
+
+    //si la precision de A es mas chica
+    if(contador_a < 0 && contador_b >= 0){
+
+      result.digits[cant-i-1] = b.digits[contador_b] - resto;
+      resto=0;
       result.signo = false;
-    }else if(contador_b < 0 && contador_a >= 0){
-      result.digits[cant-i-1] = a.digits[contador_a];
+    }
+    //si la precision de B es mas chica
+    if(contador_b < 0 && contador_a >= 0){
+      result.digits[cant-i-1] = a.digits[contador_a]- resto;
+      resto=0;
       result.signo = true;
     }
+
+
 
     //cout << result.digits[cant-i-1] << endl;
   }
