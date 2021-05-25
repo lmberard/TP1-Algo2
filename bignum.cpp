@@ -3,8 +3,8 @@
 #include <algorithm>
 using namespace std;
 
-//prueba comentario 
-bignum::bignum()
+
+bignum::bignum(void)
 {
   signo = true;
   precision = 10;
@@ -26,9 +26,17 @@ bignum::bignum(const unsigned short a)
 
 bignum::bignum(const string &str1)
 {
+
   //Saco los espacios en blanco.
   string str;
   for(char c:str1) if(!isspace(c)) str += c ;
+
+  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
+  {
+    cout<<"Asignacion de numero invalida"<<endl;
+    exit(1);
+  }
+
   //Defino el signo.
   if(str[0]=='-')
   {
@@ -66,7 +74,7 @@ void bignum::set_signo(bool s){
   signo=s;
 }
 
-const bignum bignum::operator=(const bignum& right)
+const bignum& bignum::operator=(const bignum& right)
 {
   if(&right !=this)
   {
@@ -95,7 +103,11 @@ const bignum& bignum::operator=(const string& right)
 {
   string str;
   for(char c:right) if(!isspace(c)) str += c ;
-
+  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
+  {
+    cout<<"Asignacion de numero invalida"<<endl;
+    exit(1);
+  }
   if(str[0]=='-'){signo=false;}
   if(precision!=str.length())
   {
@@ -121,12 +133,12 @@ bignum operator+(const bignum& a, const bignum& b)
   unsigned short m = b.precision;
   bignum result(max(n,m)+1);
   if(!a.signo && b.signo){
-    //a.set_signo(true);
-    //return b-a;
+    bignum c = -a;
+    return b-c;
   }
   if(a.signo && !b.signo){
-    //b.set_signo(true);
-    //return a-b;
+    bignum c = -a;
+    return a-c;
   }
   if(!a.signo && !b.signo){
     result.signo=false;
@@ -161,13 +173,13 @@ bignum operator+(const bignum& a, const bignum& b)
 
 bignum operator-(const bignum& a, const bignum& b)
 {
-  unsigned short cant = max(a.precision,b.precision); 
+  unsigned short cant = max(a.precision,b.precision);
   unsigned short resto = 0;
   int aux = 0;
   bignum result(cant); 
   int i = 0, contador_a = 0, contador_b = 0;
   unsigned int dif_a = 0, dif_b = 0;
-  
+
   if(a.precision <= b.precision){
     dif_a = cant - a.precision;
     dif_b = 0;
@@ -176,7 +188,7 @@ bignum operator-(const bignum& a, const bignum& b)
     dif_b = cant - b.precision;
     dif_a = 0;
   }
-  
+
   for(i = 0; i < cant; i++){
     cout << "Iteracion nro" << i <<endl;
 
@@ -189,7 +201,7 @@ bignum operator-(const bignum& a, const bignum& b)
       cout << "Aux casteado:" << aux << endl;
       aux -= resto;
 
-      //verifico si tengo que "pedir" al de al lado 
+      //verifico si tengo que "pedir" al de al lado
       if(aux < b.digits[contador_b]){
         aux += 10;
         resto = 1;
@@ -231,7 +243,14 @@ bignum operator-(const bignum& a, const bignum& b)
     //cout << result.digits[0] << endl;
   return result;
 }
-
+bignum operator-(const bignum& num)
+{
+  bignum result;
+  result.precision=num.precision;
+  result.signo=!num.signo;
+  result.digits=num.digits;
+  return result;
+}
 
 ostream& operator<<(ostream& os, const bignum& num)
 {
@@ -253,6 +272,11 @@ istream& operator>>(istream& is, bignum& num)
 {
   string s;
   is >> s;
+  while(!(s.find_first_not_of( "0123456789" ) == string::npos) && (s[0]!='-' && s[0]!='+'))
+  {
+    cout << "El valor ingresado no es correcto. Intente nuevamente." << endl;
+    is >> s;
+  }
   num = s;
   return is;
 }
