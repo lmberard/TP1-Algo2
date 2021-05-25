@@ -17,26 +17,13 @@ int main(int argc, char const *argv[]) {
   cin >> a;
   cout << "Ingrese el valor de b: "<< endl;
   cin >> b;
-<<<<<<< HEAD
   if(a<b){cout<<"a es menor que b"<<endl;}
   if(a>b){cout<<"a es mayor que b"<<endl;}
   //if(a==b){cout << "a es igual a b" <<endl;}
   bignum c;
   c= a-b;
   cout << "Resultado de a-b es " << c <<endl;
-=======
-  cout << "Resultado de la a+b:" << a+b <<endl;
-  cout << "Resultado de la a-b:" << a-b <<endl;
-  bignum b("6546");
-  string str = "45646s";
-  bignum c = str;
-  cout << c <<endl;
-  // cout << "Ingrese el valor de a: "<< endl;
-  // cin >> a;
-  // cout << "Ingrese el valor de b: "<< endl;
-  // cin >> b;
-  // cout << "Resultado de -a es " << -a <<endl;
->>>>>>> 10455377a51fe61c83aa97c19e258c23a2168b90
+  cout << "Resultado de a+b es " << a+b <<endl;
 
 
 
