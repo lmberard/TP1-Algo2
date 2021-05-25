@@ -360,8 +360,8 @@ bignum operator*(const bignum& a, const bignum& b)
   unsigned short n = a.precision;
   unsigned short m = b.precision;
   unsigned short n_rtado = n+m;
-  bignum result_aux1(n_rtado);
-  bignum result(n_rtado);
+  bignum result_aux(n+m), vacio(n+m);
+  bignum result(n+m);
 
   //signo
   if(a.signo != b.signo){
@@ -369,36 +369,43 @@ bignum operator*(const bignum& a, const bignum& b)
   }else result.signo=true;
 
   //recorro b desde atras para adelante
-  for(size_t i=0; i < b.precision; i++){
+  for(size_t i=b.precision; i >=0; i--){
     
     //verifico casos limites de multiplicar por 1 o cero
-    /*
-    if(b.digits[m-i-1] == 0){
-      result_aux1.digits = 0;
-      break;
+    
+    if(b.digits[i] == 0){
+      continue;
+    } else if(b.digits[i] == 1){
+      result_aux = a;
+      continue;
     }
-    if(b.digits[m-i-1] == 1){
-      result_aux1 = a;
-      break;
-    }*/
     
     //multiplico uno de b por todos de a
-    for(size_t j=0; j < a.precision; j++){
-
-      aux = a.digits[n-j-1] * b.digits[m-i-1] + carry;
+    for(size_t j=a.precision; j >=0; j--){
+      result_aux = vacio;//le borro lo anterior
+      
+      aux = a.digits[j] * b.digits[i] + carry;
 
       //carry
       if(aux >=10){
         carry = aux / 10;
         aux = aux % 10;
-      }     
-      
+      }
+
       //guardo 
-      result_aux1.digits[n-j-1] = aux;
+      if(j = 0){
+        result_aux.digits[i+j+1] = aux;
+        result_aux.digits[i+j] = carry;
+      }     
+      else result_aux.digits[i+j+1] = aux;
+      
     }
-    
-    result + result_aux1;
+
+    result = result + result_aux;
   }
+  //borro result_aux y vacio
+ // ~result_aux;
+  //~vacio;
 
   return result;
 }
