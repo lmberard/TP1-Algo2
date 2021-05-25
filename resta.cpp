@@ -1,55 +1,96 @@
-
-  unsigned short cant = a.precision; //aca en realidad es la precision maxima =>max(a,b)->verificar
-  unsigned short resto = 0, aux = 0;
+bignum operator-(const bignum& a, const bignum& b)
+{
+  unsigned short cant = max(a.precision,b.precision); 
+  unsigned short resto = 0;
+  int aux = 0;
   bignum result(cant); 
-  unsigned int i = 0;
+  int i = 0, contador_a = 0, contador_b = 0;
+  unsigned int dif_a = 0, dif_b = 0;
+  
+  if(a.precision <= b.precision){
+    dif_a = cant - a.precision;
+    dif_b = 0;
+  }
+  else {
+    dif_b = cant - b.precision;
+    dif_a = 0;
+  }
   
   for(i = 0; i < cant; i++){
+    cout << "Iteracion nro" << i <<endl;
 
-    aux = a.digits[cant-1-i];
-    aux -= resto;
+    contador_a = cant - 1 - dif_a - i;
+    contador_b = cant - 1 - dif_b - i;
 
-    //verifico si tengo que "pedir" al de al lado 
-    if(aux < b.digits[cant-1-i]){
-      aux += 10;
-      resto = 1;
+    if(contador_a >= 0 && contador_b >=0){ // para evitar que ingrese a algo que no existe
+      cout << "Digito" <<a.digits[contador_a] << endl;
+      aux = (int)a.digits[contador_a];
+      cout << "Aux casteado:" << aux << endl;
+      aux -= resto;
+
+      //verifico si tengo que "pedir" al de al lado 
+      if(aux < b.digits[contador_b]){
+        aux += 10;
+        resto = 1;
+      }
+      else resto = 0;
+      //cout << "aux" << aux <<endl;
+      //cout << "resto" << resto <<endl;
+
+      //resto
+      aux -= (int)b.digits[contador_b]; 
+      //cout << "Rtado final" << aux <<endl;
+      
+      if(aux <0){ 
+        result.signo=false; 
+        aux = aux - (aux*2); 
+      }
+
+      result.digits[cant-i-1] = aux;
     }
-    else resto = 0;
 
-    //resto
-    aux -= b.digits[cant-1-i]; 
-    
-    //cuando llega al principio:=> aca esta el problema
-    // ej: si hago 3-4 = -1
-    //verificar si el valor de aux es negativo, creo que ahi esta el problema
-    //tratar de cambiarlo a int 
-    if(aux <0){ 
-      result.signo=false; //porque es 
-      aux = aux - (aux*2); //para que lo haga positivo
+    //si la precision de A es mas chica
+    if(contador_a < 0 && contador_b >= 0){
+
+      result.digits[cant-i-1] = b.digits[contador_b] - resto;
+      resto=0;
+      result.signo = false;
+    }
+    //si la precision de B es mas chica
+    if(contador_b < 0 && contador_a >= 0){
+      result.digits[cant-i-1] = a.digits[contador_a]- resto;
+      resto=0;
+      result.signo = true;
     }
 
-    result.digits[cant-i-1] = aux;
-    cout << result.digits[cant-i-1] << endl;
+
+
+    //cout << result.digits[cant-i-1] << endl;
   }
     //cout << result.digits[0] << endl;
   return result;
 }
 
 /*
-//testeo
-  string stra="146";
-  bignum a=stra;
-  cout << a <<endl;
-  string str = "137";
-  bignum b(str);
-  cout << b << endl;
-  bignum c=a-b;
-  cout << "Ejemplo:" << endl;
-  cout << c << endl;
-  /*
-  unsigned short nro1 = 1, nro2 = 4;
-  unsigned short rta= nro1-nro2;
-  cout << rta << endl;*/
+bool operator<(const bignum& a, const bignum& b)
+{
+  for(int i=0; i<min(a.precision,b.precision); i++>)
+  {
+    if(a.digits[i]>b.digits[i]){
+      return false;
+    }
+  }
+  return true;
+}
 
-
+bool operator>(const bignum& a, const bignum& b)
+{
+  for(int i=0; i<min(a.precision,b.precision); i++>)
+  {
+    if(a.digits[i]<b.digits[i]){
+      return false;
+    }
+  }
+  return true;
+}
 */
