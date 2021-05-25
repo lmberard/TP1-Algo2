@@ -6,7 +6,7 @@ all: tp0
 bignum.o: bignum.cpp bignum.h
 	$(CC) $(FLAGS) bignumm.0
 
-tp0: bignum.h tp0.cpp
+tp0: bignum.cpp tp0.cpp
 	$(CC) $(FLAGS) $^ -o tp0 
 
 clean:
