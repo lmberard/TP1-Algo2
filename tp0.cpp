@@ -249,9 +249,6 @@ void operar(istream *is, ostream *os)
       num1.set_precision(precision);
       num2.set_precision(precision);
 
-      cout<<num1<<endl;
-      cout<<num2<<endl;
-
       bignum res;
 
       if(s[pos_op]=='+')
