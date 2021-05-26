@@ -33,25 +33,33 @@ bignum::bignum(const string &str1)
 
   if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
   {
-    cout<<"Asignacion de numero invalida"<<endl;
+    cerr<<"Asignacion de numero invalida"<<endl;
     exit(1);
   }
 
   //Defino el signo.
+  bool hay_signo;
   if(str[0]=='-')
   {
     signo=false;
+    hay_signo=true;
     precision=str.length()-1;
-  } else
+  } else if(str[0]=='+')
   {
     signo=true;
+    hay_signo=true;
+    precision=str.length()-1;
+  }else{
+    hay_signo=true;
     precision=str.length();
   }
   //Creo el arreglo de shorts
   digits=new unsigned short[precision];
+
+
   for(size_t i=0;i<precision;i++)
   {
-    digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+    digits[precision-1-i]=str[precision+hay_signo-i]-ASCII_FIX;
   }
 }
 
@@ -105,60 +113,63 @@ const bignum& bignum::operator=(const string& right)
   for(char c:right) if(!isspace(c)) str += c ;
   if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
   {
-    cout<<"Asignacion de numero invalida"<<endl;
+    cerr<<"Asignacion de numero invalida"<<endl;
     exit(1);
   }
-  if(str[0]=='-'){signo=false;}
+  bool hay_signo=false;
+  if(str[0]=='-'){signo=false;hay_signo=true;}
+  if(str[0]=='+'){signo=true;hay_signo=true;}
   if(precision!=str.length())
   {
     unsigned short *aux;
-    aux=new unsigned short[str.length()-!signo];
+    aux=new unsigned short[str.length()-hay_signo];
     delete[]digits;
-    precision=str.length()-!signo;
+    precision=str.length()-hay_signo;
     digits=aux;
     for(int i=0; i<precision; i++)
-      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+      digits[precision-1-i]=str[precision+hay_signo-i-1]-ASCII_FIX;
     return *this;
   }else
   {
     for(int i=0; i<precision; i++)
-      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+      digits[precision-1-i]=str[precision+hay_signo-i]-ASCII_FIX;
     return *this;
   }
 }
 
-const bignum& bignum::operator=(const char*& right)
-{
-  string str;
-  string s = right;
-  for(char c:s) if(!isspace(c)) str += c ;
-
-  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
-  {
-    cout<<"Asignacion de numero invalida"<<endl;
-    exit(1);
-  }
-  if(str[0]=='-'){signo=false;}
-  if(precision!=str.length())
-  {
-    unsigned short *aux;
-    aux=new unsigned short[str.length()-!signo];
-    delete[]digits;
-    precision=str.length()-!signo;
-    digits=aux;
-    for(int i=0; i<precision; i++)
-      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
-    return *this;
-  }else
-  {
-    for(int i=0; i<precision; i++)
-      digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
-    return *this;
-  }
-}
+// const bignum& bignum::operator=(const char*& right)
+// {
+//   string str;
+//   string s = right;
+//   for(char c:s) if(!isspace(c)) str += c ;
+//
+//   if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
+//   {
+//     cerr<<"Asignacion de numero invalida"<<endl;
+//     exit(1);
+//   }
+//   if(str[0]=='-'){signo=false;}
+//   if(precision!=str.length())
+//   {
+//     unsigned short *aux;
+//     aux=new unsigned short[str.length()-!signo];
+//     delete[]digits;
+//     precision=str.length()-!signo;
+//     digits=aux;
+//     for(int i=0; i<precision; i++)
+//       digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+//     return *this;
+//   }else
+//   {
+//     for(int i=0; i<precision; i++)
+//       digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+//     return *this;
+//   }
+// }
 
 bignum operator+(const bignum& a, const bignum& b)
 {
+
   unsigned short n = a.precision;
   unsigned short m = b.precision;
   bignum result(max(n,m)+1);
@@ -168,7 +179,7 @@ bignum operator+(const bignum& a, const bignum& b)
     return result;
   }
   if(a.signo && !b.signo){
-    bignum c = -a;
+    bignum c = -b;
     result=a-c;
     return result;
   }
@@ -214,8 +225,14 @@ bignum operator-(const bignum& a, const bignum& b)
   if(a==b){
     return result;
   }
+  if(a<b){
+    result = b-a;
+    result.signo=false;
+    return result;
+  }
   if(!a.signo && b.signo){
-    result = a+b;
+    bignum c=-a;
+    result = c+b;
     result.signo=false;
     return result;
   }
@@ -225,14 +242,10 @@ bignum operator-(const bignum& a, const bignum& b)
     return result;
   }
   if(!a.signo && !b.signo){
-    result = -b;
-    bignum c= -a;
-    result = result-c;
-    return result;
-  }
-  if(a<b){
-    result = b-a;
-    result.signo=false;
+
+    bignum c= -b;
+    bignum d= -a;
+    result = c-d;
     return result;
   }
 
@@ -260,12 +273,47 @@ bignum operator-(const bignum& a, const bignum& b)
   }
   return result;
 }
+
 bignum operator-(const bignum& num)
 {
   bignum result;
   result.precision=num.precision;
   result.signo=!num.signo;
   result.digits=num.digits;
+  return result;
+}
+
+bignum operator*(const bignum& a, const bignum& b){
+
+  unsigned short n = a.precision;
+  unsigned short m = b.precision;
+  unsigned short carry = 0;
+  bignum aux(n+m);
+  bignum aux2(n+m);
+  bignum result(n+m);
+
+  for(size_t j = 0; j < m; j++){
+    for(size_t i = 0; i < n; i++){
+      aux.digits[n+m-1-i-j] = a.digits[n-1-i]*b.digits[m-1-j] + carry;
+      if(aux.digits[n+m-1-i-j] >= 10){
+        carry = aux.digits[n+m-1-i-j]/10;
+        aux.digits[n+m-1-i-j] -=  10*(aux.digits[n+m-1-i-j]/10);
+      }
+      else carry = 0;
+    }
+    aux.digits[m-1-j] = carry;
+
+  for(size_t k = 0; k < j; k++){
+    aux.digits[n+m-1-k] = 0;
+  }
+    aux2 = aux2 + aux;
+    carry = 0;
+  }
+
+  result = aux2;
+  if((!a.signo && b.signo) ||(a.signo && !b.signo) ){
+    result.signo = false;
+  }
   return result;
 }
 bool operator==(const bignum&a, const bignum&b)
@@ -345,7 +393,7 @@ istream& operator>>(istream& is, bignum& num)
   is >> s;
   while(!(s.find_first_not_of( "0123456789" ) == string::npos) && (s[0]!='-' && s[0]!='+'))
   {
-    cout << "El valor ingresado no es correcto. Intente nuevamente." << endl;
+    cerr << "El valor ingresado no es correcto. Intente nuevamente." << endl;
     is >> s;
   }
   num = s;
