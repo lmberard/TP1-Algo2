@@ -49,11 +49,11 @@ static option_t options[] = {
 	{1, "i", "input", "-", opt_input, OPT_DEFAULT},
 	{1, "o", "output", "-", opt_output, OPT_DEFAULT},
 	{0, "h", "help", NULL, opt_help, OPT_DEFAULT},
-	{1, "p", "precision",NULL, opt_precision, OPT_MANDATORY},
+	{1, "p", "precision",NULL, opt_precision, OPT_DEFAULT},
 };
 
 //static int factor;
-static int precision;
+static unsigned int precision;
 static istream *iss = 0;	// Input Stream (clase para manejo de los flujos de entrada)
 static ostream *oss = 0;	// Output Stream (clase para manejo de los flujos de salida)
 static fstream ifs; 		// Input File Stream (derivada de la clase ifstream que deriva de istream para el manejo de archivos)
@@ -162,7 +162,7 @@ void operar(istream *is, ostream *os)
     s="";
     for(char c:str) if(!isspace(c)) s += c;
 
-    if(!str.empty()){
+    if(!s.empty()){
       //Chequeo que no haya letras ni caracteres invalidos
       if(!(s.find_first_not_of("0123456789+-*") == string::npos))
       {
@@ -247,6 +247,10 @@ void operar(istream *is, ostream *os)
 
       num1=a;
       num2=b;
+
+      num1.set_precision(precision);
+      num2.set_precision(precision);
+
       bignum res;
 
       if(s[pos_op]=='+')
@@ -274,13 +278,12 @@ void operar(istream *is, ostream *os)
   }
 }
 
-int
-main(int argc, char * const argv[])
+int main(int argc, char * const argv[])
 {
 
 	cmdline cmdl(options);	// Objeto con parametro tipo option_t (struct) declarado globalmente. Ver l�nea 51 main.cc
 	cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
-	operar(iss, oss);	    // Funci�n externa, no es un metodo de ninguna clase o estructura usada en el c�digo
+  operar(iss, oss);	    // Funci�n externa, no es un metodo de ninguna clase o estructura usada en el c�digo
 
 
   return 0;

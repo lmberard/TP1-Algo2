@@ -7,10 +7,10 @@ using namespace std;
 bignum::bignum(void)
 {
   signo = true;
-  precision = 10;
-  digits = new unsigned short[precision];
+  len = 10;
+  digits = new unsigned short[len];
 
-  for(size_t i=0;i<precision;i++)
+  for(size_t i=0;i<len;i++)
   {digits[i]=0;}
 }
 
@@ -18,9 +18,9 @@ bignum::bignum(void)
 bignum::bignum(const unsigned short a)
 {
   signo = true;
-  precision = a;
-  digits = new unsigned short[precision];
-  for(size_t i=0;i<precision;i++)
+  len = a;
+  digits = new unsigned short[len];
+  for(size_t i=0;i<len;i++)
   {digits[i]=0;}
 }
 
@@ -43,23 +43,23 @@ bignum::bignum(const string &str1)
   {
     signo=false;
     hay_signo=true;
-    precision=str.length()-1;
+    len=str.length()-1;
   } else if(str[0]=='+')
   {
     signo=true;
     hay_signo=true;
-    precision=str.length()-1;
+    len=str.length()-1;
   }else{
     hay_signo=true;
-    precision=str.length();
+    len=str.length();
   }
   //Creo el arreglo de shorts
-  digits=new unsigned short[precision];
+  digits=new unsigned short[len];
 
 
-  for(size_t i=0;i<precision;i++)
+  for(size_t i=0;i<len;i++)
   {
-    digits[precision-1-i]=str[precision+hay_signo-i]-ASCII_FIX;
+    digits[len-1-i]=str[len+hay_signo-i]-ASCII_FIX;
   }
 }
 
@@ -71,15 +71,22 @@ bignum::~bignum()
 
 void bignum::set_p(unsigned short a)
 {
-  precision=a;
+  len=a;
 }
 
 unsigned short bignum::get_p()
 {
-  return precision;
+  return len;
 }
 void bignum::set_signo(bool s){
   signo=s;
+}
+
+void bignum::set_precision(const unsigned short precision){
+  if(precision>0 && len>precison)
+  {
+
+  }
 }
 
 const bignum& bignum::operator=(const bignum& right)
@@ -87,20 +94,20 @@ const bignum& bignum::operator=(const bignum& right)
   if(&right !=this)
   {
     signo=right.signo;
-    if(precision!=right.precision)
+    if(len!=right.len)
     {
       unsigned short *aux;
-      aux=new unsigned short[right.precision];
+      aux=new unsigned short[right.len];
       delete[]digits;
-      precision=right.precision;
+      len=right.len;
       digits=aux;
-      for(int i=0; i<precision; i++)
+      for(int i=0; i<len; i++)
         {digits[i]=right.digits[i];}
       return *this;
     }
     else
     {
-      for(int i=0; i<precision; i++)digits[i]=right.digits[i];
+      for(int i=0; i<len; i++)digits[i]=right.digits[i];
       return *this;
     }
   }
@@ -119,20 +126,20 @@ const bignum& bignum::operator=(const string& right)
   bool hay_signo=false;
   if(str[0]=='-'){signo=false;hay_signo=true;}
   if(str[0]=='+'){signo=true;hay_signo=true;}
-  if(precision!=str.length())
+  if(len!=str.length())
   {
     unsigned short *aux;
     aux=new unsigned short[str.length()-hay_signo];
     delete[]digits;
-    precision=str.length()-hay_signo;
+    len=str.length()-hay_signo;
     digits=aux;
-    for(int i=0; i<precision; i++)
-      digits[precision-1-i]=str[precision+hay_signo-i-1]-ASCII_FIX;
+    for(int i=0; i<len; i++)
+      digits[len-1-i]=str[len+hay_signo-i-1]-ASCII_FIX;
     return *this;
   }else
   {
-    for(int i=0; i<precision; i++)
-      digits[precision-1-i]=str[precision+hay_signo-i]-ASCII_FIX;
+    for(int i=0; i<len; i++)
+      digits[len-1-i]=str[len+hay_signo-i]-ASCII_FIX;
     return *this;
   }
 }
@@ -149,20 +156,20 @@ const bignum& bignum::operator=(const string& right)
 //     exit(1);
 //   }
 //   if(str[0]=='-'){signo=false;}
-//   if(precision!=str.length())
+//   if(len!=str.length())
 //   {
 //     unsigned short *aux;
 //     aux=new unsigned short[str.length()-!signo];
 //     delete[]digits;
-//     precision=str.length()-!signo;
+//     len=str.length()-!signo;
 //     digits=aux;
-//     for(int i=0; i<precision; i++)
-//       digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+//     for(int i=0; i<len; i++)
+//       digits[len-1-i]=str[len-signo-i]-ASCII_FIX;
 //     return *this;
 //   }else
 //   {
-//     for(int i=0; i<precision; i++)
-//       digits[precision-1-i]=str[precision-signo-i]-ASCII_FIX;
+//     for(int i=0; i<len; i++)
+//       digits[len-1-i]=str[len-signo-i]-ASCII_FIX;
 //     return *this;
 //   }
 // }
@@ -170,8 +177,8 @@ const bignum& bignum::operator=(const string& right)
 bignum operator+(const bignum& a, const bignum& b)
 {
 
-  unsigned short n = a.precision;
-  unsigned short m = b.precision;
+  unsigned short n = a.len;
+  unsigned short m = b.len;
   bignum result(max(n,m)+1);
   if(!a.signo && b.signo){
     bignum c = -a;
@@ -217,8 +224,8 @@ bignum operator+(const bignum& a, const bignum& b)
 bignum operator-(const bignum& a, const bignum& b)
 {
 
-  unsigned short n = a.precision;
-  unsigned short m = b.precision;
+  unsigned short n = a.len;
+  unsigned short m = b.len;
   bignum result(max(n,m));
 
 
@@ -269,7 +276,7 @@ bignum operator-(const bignum& a, const bignum& b)
     } else {
       carry=0;
     }
-    result.digits[result.precision-i-1]=aux;
+    result.digits[result.len-i-1]=aux;
   }
   return result;
 }
@@ -285,8 +292,8 @@ bignum operator-(const bignum& num)
 
 bignum operator*(const bignum& a, const bignum& b){
 
-  unsigned short n = a.precision;
-  unsigned short m = b.precision;
+  unsigned short n = a.len;
+  unsigned short m = b.len;
   unsigned short carry = 0;
   bignum aux(n+m);
   bignum aux2(n+m);
@@ -318,9 +325,9 @@ bignum operator*(const bignum& a, const bignum& b){
 }
 bool operator==(const bignum&a, const bignum&b)
 {
-  if(a.signo==b.signo && a.precision==b.precision)
+  if(a.signo==b.signo && a.len==b.len)
   {
-    for(size_t i = 0; i < a.precision; i++)
+    for(size_t i = 0; i < a.len; i++)
     {
       if(a.digits[i]!=b.digits[i])
         return false;
@@ -332,12 +339,12 @@ bool operator==(const bignum&a, const bignum&b)
 
 bool operator<(const bignum& a, const bignum& b)
 {
-  if(a.precision<b.precision)
+  if(a.len<b.len)
     return true;
-  else if(b.precision<a.precision)
+  else if(b.len<a.len)
     return false;
   else{
-    for(int i=0; i<a.precision; i++)
+    for(int i=0; i<a.len; i++)
     {
       if(a.digits[i]<b.digits[i]){
         return true;
@@ -349,12 +356,12 @@ bool operator<(const bignum& a, const bignum& b)
 }
 bool operator>(const bignum& a, const bignum& b)
 {
-  if(a.precision>b.precision)
+  if(a.len>b.len)
     return true;
-  else if(b.precision>a.precision)
+  else if(b.len>a.len)
     return false;
   else{
-    for(int i=0; i<a.precision; i++)
+    for(int i=0; i<a.len; i++)
     {
       if(a.digits[i]>b.digits[i]){
         return true;
@@ -370,12 +377,12 @@ ostream& operator<<(ostream& os, const bignum& num)
   if(num.signo==false)
   { os << '-'; }
   bool aux= false;
-  for(int i = 0; i< num.precision;i++)
+  for(int i = 0; i< num.len;i++)
   {
     //saco los ceros de la izquierda
     if(num.digits[i]==0 && aux==false)
     {
-      if(i==num.precision-1){
+      if(i==num.len-1){
         os<<'0';
         return os;
       }

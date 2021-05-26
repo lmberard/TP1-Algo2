@@ -11,8 +11,7 @@ class bignum
 {
   private:
     unsigned short *digits;
-    unsigned short precision;
-    //unsigned short len;
+    unsigned short len;
     bool signo; //True sea positivo y False sea Negativo
     //...
   public:
@@ -20,11 +19,12 @@ class bignum
     bignum(void);
     bignum(const unsigned short);
     bignum(const string&);
-
     ~bignum();
+
     void set_p(unsigned short);
     unsigned short get_p();
     void set_signo(bool);
+    void set_precision(const unsigned short);
     //friend void set_len();
     //friend unsigned char get_len();
     //friend bignum to_bignum(int);
