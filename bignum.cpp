@@ -189,7 +189,7 @@ bignum operator+(const bignum& a, const bignum& b)
   unsigned short carry = 0;
   unsigned short aux = 0;
 
-  for(size_t i=0; i< max(n,m)+1;i++){
+  for(int i=0; i< max(n,m)+1;i++){
 
     if((short)(m-i-1)<0 && (short)(n-i-1)<0){
       aux=carry;
@@ -277,9 +277,9 @@ bignum operator-(const bignum& a, const bignum& b)
 bignum operator-(const bignum& num)
 {
   bignum result;
-  result.precision=num.precision;
+  result=num;
   result.signo=!num.signo;
-  result.digits=num.digits;
+
   return result;
 }
 
@@ -370,7 +370,7 @@ ostream& operator<<(ostream& os, const bignum& num)
   if(num.signo==false)
   { os << '-'; }
   bool aux= false;
-  for(size_t i = 0; i< num.precision;i++)
+  for(int i = 0; i< num.precision;i++)
   {
     //saco los ceros de la izquierda
     if(num.digits[i]==0 && aux==false)
