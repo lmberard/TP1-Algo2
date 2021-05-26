@@ -13,21 +13,18 @@ class bignum
     unsigned short *digits;
     unsigned short len;
     bool signo; //True sea positivo y False sea Negativo
-    //...
+
   public:
-    //...
+
     bignum(void);
     bignum(const unsigned short);
     bignum(const string&);
     ~bignum();
 
-    void set_p(unsigned short);
-    unsigned short get_p();
     void set_signo(bool);
+    bool get_signo();
+    unsigned char get_len();
     void set_precision(const unsigned short);
-    //friend void set_len();
-    //friend unsigned char get_len();
-    //friend bignum to_bignum(int);
 
     friend bignum operator+(const bignum&, const bignum&);
     friend bignum operator-(const bignum&, const bignum&);
@@ -35,7 +32,6 @@ class bignum
     friend bignum operator*(const bignum&, const bignum&);
     const bignum& operator=(const bignum&);
     const bignum& operator=(const string&);
-    const bignum& operator=(const char*&);
 
     friend bool operator==(const bignum&, const bignum&);
     friend bool operator<(const bignum&, const bignum&);
