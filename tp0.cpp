@@ -243,8 +243,6 @@ void operar(istream *is, ostream *os)
 
       }
 
-
-
       num1=a;
       num2=b;
 

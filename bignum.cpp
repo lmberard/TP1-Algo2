@@ -69,25 +69,27 @@ bignum::~bignum()
   {delete[] digits;}
 }
 
-void bignum::set_p(unsigned short a)
-{
-  len=a;
-}
-
-unsigned short bignum::get_p()
-{
-  return len;
-}
 void bignum::set_signo(bool s){
   signo=s;
 }
+bool bignum.get_signo(){
+  return signo;
+}
+unsigned char bignum::get_len(){
+  return len;
+}
 
 void bignum::set_precision(const unsigned short precision){
-  if(precision>0 && len>precison)
+  if(precision>0 && len>precision)
   {
-
+    for(int i=0; i<len-precision; i++){
+      if(digits[precision]>=5)
+        digits[precision-1]++;
+      digits[precision+i]=0;
+    }
   }
 }
+
 
 const bignum& bignum::operator=(const bignum& right)
 {
@@ -143,36 +145,6 @@ const bignum& bignum::operator=(const string& right)
     return *this;
   }
 }
-
-// const bignum& bignum::operator=(const char*& right)
-// {
-//   string str;
-//   string s = right;
-//   for(char c:s) if(!isspace(c)) str += c ;
-//
-//   if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+'))
-//   {
-//     cerr<<"Asignacion de numero invalida"<<endl;
-//     exit(1);
-//   }
-//   if(str[0]=='-'){signo=false;}
-//   if(len!=str.length())
-//   {
-//     unsigned short *aux;
-//     aux=new unsigned short[str.length()-!signo];
-//     delete[]digits;
-//     len=str.length()-!signo;
-//     digits=aux;
-//     for(int i=0; i<len; i++)
-//       digits[len-1-i]=str[len-signo-i]-ASCII_FIX;
-//     return *this;
-//   }else
-//   {
-//     for(int i=0; i<len; i++)
-//       digits[len-1-i]=str[len-signo-i]-ASCII_FIX;
-//     return *this;
-//   }
-// }
 
 bignum operator+(const bignum& a, const bignum& b)
 {
