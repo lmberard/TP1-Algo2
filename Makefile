@@ -1,7 +1,14 @@
+PROGRAM=tp0
 CC := g++
-FLAGS := -Wall -pedantic -g 
+FLAGS := -Wall -pedantic -g
+LDLFLAGS=-lm
+GREEN= \e[92m
+NORMAL= \e[0m 
 
-all: tp0
+all: 
+	@echo "$(GREEN)Compilando ...$(NORMAL)"
+	$(MAKE) tp0
+	@echo "$(GREEN)Terminó$(NORMAL)"
 
 cmdline.o: cmdline.cpp cmdline.h
 	$(CC) $(FLAGS) cmdline.o
@@ -13,7 +20,9 @@ tp0: cmdline.cpp bignum.cpp tp0.cpp
 	$(CC) $(FLAGS) $^ -o tp0 
 
 clean:
-	rm *.o
+	@echo "$(GREEN)Limpiando ...$(NORMAL)"
+	rm -vf *.o $(PROGRAM)
+	@echo "$(GREEN)Listo!$(NORMAL)"
 
 gdb: tp0
 	gdb ./tp0
