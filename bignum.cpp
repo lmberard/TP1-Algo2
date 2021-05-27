@@ -72,7 +72,7 @@ bignum::~bignum()
 void bignum::set_signo(bool s){
   signo=s;
 }
-bool bignum.get_signo(){
+bool bignum::get_signo(){
   return signo;
 }
 unsigned char bignum::get_len(){
