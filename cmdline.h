@@ -1,3 +1,16 @@
+/*
+Universidad de Buenos Aires
+Facultad de Ingenieria
+
+Algoritmos y Programaci贸n II - Trabajo Practico N掳0 
+
+Integrantes:
+Berard, Luc谋a Magdalena		101213  lberard@fi.uba.ar
+Guglieri, Mariano Federico    	99573	mguglieri@fi.uba.ar
+Rubin, Ivan Eric		100577  irubin@fi.uba.ar
+Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
+*/
+
 #ifndef _CMDLINE_H_INCLUDED_
 #define _CMDLINE_H_INCLUDED_
 
@@ -13,13 +26,13 @@ struct option_t {
 	const char *short_name;
 	const char *long_name;
 	const char *def_value;
-	void (*parse)(std::string const &); // Puntero a funci髇 de opciones
+	void (*parse)(std::string const &); // Puntero a funci贸n de opciones
 	int flags;
 };
 
 class cmdline {
 	// Este atributo apunta a la tabla que describe todas
-	// las opciones a procesar. Por el momento, s髄o puede
+	// las opciones a procesar. Por el momento, s贸lo puede
 	// ser modificado mediante contructor, y debe finalizar
 	// con un elemento nulo.
 	//
@@ -27,8 +40,8 @@ class cmdline {
 
 	// El constructor por defecto cmdline::cmdline(), es
 	// privado, para evitar construir "parsers" (analizador 
-	// sint醕tico, recibe una palabra y lo interpreta en 
-	// una acci髇 dependiendo su significado para el programa) 
+	// sint谩ctico, recibe una palabra y lo interpreta en 
+	// una acci贸n dependiendo su significado para el programa) 
 	// sin opciones. Es decir, objetos de esta clase sin opciones.
 	//
 
