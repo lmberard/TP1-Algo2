@@ -1,3 +1,17 @@
+/*
+Universidad de Buenos Aires
+Facultad de Ingenieria
+
+Algoritmos y Programación II - Trabajo Practico N°0 
+
+Integrantes:
+Berard, Lucıa Magdalena		101213  lberard@fi.uba.ar
+Guglieri, Mariano Federico    	99573	mguglieri@fi.uba.ar
+Rubin, Ivan Eric		100577  irubin@fi.uba.ar
+Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
+*/
+
+
 #include "bignum.h"
 #include <string>
 #include <algorithm>
