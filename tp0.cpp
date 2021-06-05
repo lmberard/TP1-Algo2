@@ -1,3 +1,16 @@
+/*
+Universidad de Buenos Aires
+Facultad de Ingenieria
+
+Algoritmos y Programación II - Trabajo Practico N°0 
+
+Integrantes:
+Berard, Lucıa Magdalena		101213  lberard@fi.uba.ar
+Guglieri, Mariano Federico    	99573	mguglieri@fi.uba.ar
+Rubin, Ivan Eric		100577  irubin@fi.uba.ar
+Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
+*/
+
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -240,9 +253,15 @@ void operar(istream *is, ostream *os)
 
       }
 
+<<<<<<< HEAD
 			bignum res;
 	    bignum num1;
 	    bignum num2;
+=======
+      bignum res;
+      bignum num1;
+      bignum num2;
+>>>>>>> 564c9c56732c78bd28fa0ed0b9bbbe3d7304f037
 
       num1=a;
       num2=b;

@@ -28,4 +28,4 @@ gdb: tp0
 	gdb ./tp0
 
 valgrind: tp0
-	valgrind --leak-check=full ./tp0
+	valgrind --leak-check=full --show-leak-kinds=all ./tp0
