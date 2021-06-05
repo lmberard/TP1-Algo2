@@ -154,9 +154,6 @@ void operar(istream *is, ostream *os)
 
   while(getline(*iss,str))
   {
-    bignum res;
-    bignum num1;
-    bignum num2;
     a="";
     b="";
     s="";
@@ -243,13 +240,15 @@ void operar(istream *is, ostream *os)
 
       }
 
+			bignum res;
+	    bignum num1;
+	    bignum num2;
+
       num1=a;
       num2=b;
 
       num1.set_precision(precision);
       num2.set_precision(precision);
-
-      bignum res;
 
       if(s[pos_op]=='+')
         res=num1+num2;

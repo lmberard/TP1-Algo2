@@ -54,7 +54,9 @@ bignum::bignum(const string &str1)
     len=str.length();
   }
   //Creo el arreglo de shorts
-  digits=new unsigned short[len];
+  delete[]digits;
+  aux=new unsigned short[len];
+  digits=aux;
 
 
   for(size_t i=0;i<len;i++)
