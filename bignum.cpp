@@ -68,9 +68,7 @@ bignum::bignum(const string &str1)
     len=str.length();
   }
   //Creo el arreglo de shorts
-  delete[]digits;
-  aux=new unsigned short[len];
-  digits=aux;
+  digits=new unsigned short[len];
 
 
   for(size_t i=0;i<len;i++)
@@ -144,22 +142,18 @@ const bignum& bignum::operator=(const string& right)
   bool hay_signo=false;
   if(str[0]=='-'){signo=false;hay_signo=true;}
   if(str[0]=='+'){signo=true;hay_signo=true;}
-  if(len!=str.length())
-  {
-    unsigned short *aux;
-    aux=new unsigned short[str.length()-hay_signo];
-    delete[]digits;
-    len=str.length()-hay_signo;
-    digits=aux;
-    for(int i=0; i<len; i++)
+
+  unsigned short *aux;
+  aux=new unsigned short[str.length()-hay_signo];
+  delete[]digits;
+  len=str.length()-hay_signo;
+  digits=aux;
+  
+  for(int i=0; i<len; i++)
       digits[len-1-i]=str[len+hay_signo-i-1]-ASCII_FIX;
-    return *this;
-  }else
-  {
-    for(int i=0; i<len; i++)
-      digits[len-1-i]=str[len+hay_signo-i]-ASCII_FIX;
-    return *this;
-  }
+    
+  return *this;
+
 }
 
 bignum operator+(const bignum& a, const bignum& b)

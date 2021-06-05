@@ -253,15 +253,9 @@ void operar(istream *is, ostream *os)
 
       }
 
-<<<<<<< HEAD
-			bignum res;
-	    bignum num1;
-	    bignum num2;
-=======
       bignum res;
       bignum num1;
       bignum num2;
->>>>>>> 564c9c56732c78bd28fa0ed0b9bbbe3d7304f037
 
       num1=a;
       num2=b;
