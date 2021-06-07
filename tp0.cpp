@@ -72,7 +72,7 @@ static ostream *oss = 0;	// Output Stream (clase para manejo de los flujos de sa
 static fstream ifs; 		// Input File Stream (derivada de la clase ifstream que deriva de istream para el manejo de archivos)
 static fstream ofs;		// Output File Stream (derivada de la clase ofstream que deriva de ostream para el manejo de archivos)
 
-/*****************************************************/
+/*****************************************************/ 
 
 static void
 opt_precision(string const &arg)
