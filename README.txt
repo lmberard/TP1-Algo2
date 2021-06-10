@@ -4,7 +4,7 @@ _________________________________________________________________
 		Facultad de Ingeniería
 
 		Algoritmos y Programacion II
-		Trabajo Practico Nro 0
+		Trabajo Practico Nro 1
 
 Integrantes:
 Berard, Lucia Magdalena		101213  lberard@fi.uba.ar
@@ -17,7 +17,7 @@ _________________________________________________________________
 --------------------------Codigos--------------------------------
 -> bignum.cpp / bignum.h: Declaracion e implementacion de la clase
 -> cmdline.cpp / cmdline.h: Para el uso de la línea de comando.
--> tp0.cpp: Main principal
+-> tp1.cpp: Main principal
 -> Makefile: Archivo Makefile utilizado en el proceso de compilacion
 -> cuentas.txt: Archivo de prueba 
 
@@ -31,12 +31,12 @@ no haya fallas de memoria
 
 -------------------Ejecución del programa------------------------
 Ejemplos:
-echo "-1 - 5" | ./tp0 -p 2
-echo -189*50 | ./tp0 -p 6
+echo "-1 - 5" | ./tp1 -p 2
+echo -189*50 | ./tp1 -p 6
 
 Con archivos de entrada(i) y salida(o):
-./tp0 -p 2 -i cuentas.txt
-./tp0 -p 2 -o resultados.txt
+./tp1 -p 2 -i cuentas.txt
+./tp1 -p 2 -o resultados.txt
 
 Help:
-./tp0 -hcmdline -p precision [-i file] [-o file]
+./tp1 -hcmdline -p precision [-i file] [-o file]
