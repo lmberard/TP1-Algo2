@@ -2,7 +2,7 @@
 Universidad de Buenos Aires
 Facultad de Ingenieria
 
-Algoritmos y Programación II - Trabajo Practico N°0 
+Algoritmos y Programación II - Trabajo Practico N°0
 
 Integrantes:
 Berard, Lucıa Magdalena		101213  lberard@fi.uba.ar
@@ -148,10 +148,10 @@ const bignum& bignum::operator=(const string& right)
   delete[]digits;
   len=str.length()-hay_signo;
   digits=aux;
-  
+
   for(int i=0; i<len; i++)
       digits[len-1-i]=str[len+hay_signo-i-1]-ASCII_FIX;
-    
+
   return *this;
 
 }
@@ -273,7 +273,6 @@ bignum operator-(const bignum& num)
 }
 
 bignum operator*(const bignum& a, const bignum& b){
-
   unsigned short n = a.len;
   unsigned short m = b.len;
   unsigned short carry = 0;
@@ -305,6 +304,7 @@ bignum operator*(const bignum& a, const bignum& b){
   }
   return result;
 }
+
 bool operator==(const bignum&a, const bignum&b)
 {
   if(a.signo==b.signo && a.len==b.len)

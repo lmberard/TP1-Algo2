@@ -2,7 +2,7 @@
 Universidad de Buenos Aires
 Facultad de Ingenieria
 
-Algoritmos y Programación II - Trabajo Practico N°0 
+Algoritmos y Programación II - Trabajo Practico N°0
 
 Integrantes:
 Berard, Lucıa Magdalena		101213  lberard@fi.uba.ar
@@ -14,6 +14,7 @@ Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
 #include<string>
 using namespace std;
 
+
 #ifndef BIGNUM_INCLUDED
 #define BIGNUM_INCLUDED
 
@@ -21,6 +22,8 @@ using namespace std;
 
 class bignum
 {
+  //friend class alg1;
+  //friend class alg2;
   private:
     unsigned short *digits;
     unsigned short len;
@@ -41,7 +44,7 @@ class bignum
     friend bignum operator+(const bignum&, const bignum&);
     friend bignum operator-(const bignum&, const bignum&);
     friend bignum operator-(const bignum&);
-    friend bignum operator*(const bignum&, const bignum&);
+    friend bignum operator*(const bignum& a, const bignum& b);
     const bignum& operator=(const bignum&);
     const bignum& operator=(const string&);
 
@@ -53,5 +56,22 @@ class bignum
     friend std::istream& operator>>(std::istream&, bignum&);
 };
 
+// class alg1: public bignum{
+//   public:
+//     virtual ~alg1(){}
+//     virtual bignum operator*(const bignum& a, const bignum& b){
+//       cout<<"default"<<endl;
+//       return b;
+//     }
+// }
+//
+// class alg2: public bignum{
+//   public:
+//     virtual ~alg2(){}
+//     virtual bignum operator*(const bignum& a, const bignum& b){
+//       cout<<"Karatsuba"<<endl;
+//       return b;
+//     }
+// };
 
 #endif

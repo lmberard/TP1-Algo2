@@ -1,23 +1,23 @@
-PROGRAM=tp0
+PROGRAM=tp1
 CC := g++
 FLAGS := -Wall -pedantic -g
 LDLFLAGS=-lm
 GREEN= \e[92m
-NORMAL= \e[0m 
+NORMAL= \e[0m
 
-all: 
+all:
 	@echo "$(GREEN)Compilando ...$(NORMAL)"
 	$(MAKE) tp1
 	@echo "$(GREEN)Terminó$(NORMAL)"
 
 cmdline.o: cmdline.cpp cmdline.h
 	$(CC) $(FLAGS) cmdline.o
-	
+
 bignum.o: bignum.cpp bignum.h
-	$(CC) $(FLAGS) bignumm.0
+	$(CC) $(FLAGS) bignum.o
 
 tp1: cmdline.cpp bignum.cpp tp1.cpp
-	$(CC) $(FLAGS) $^ -o tp1 
+	$(CC) $(FLAGS) $^ -o tp1
 
 clean:
 	@echo "$(GREEN)Limpiando ...$(NORMAL)"

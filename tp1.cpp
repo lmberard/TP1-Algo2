@@ -2,7 +2,7 @@
 Universidad de Buenos Aires
 Facultad de Ingenieria
 
-Algoritmos y Programación II - Trabajo Practico N°0 
+Algoritmos y Programación II - Trabajo Practico N°0
 
 Integrantes:
 Berard, Lucıa Magdalena		101213  lberard@fi.uba.ar
@@ -26,7 +26,7 @@ using namespace std;
 
 static void opt_input(string const &);
 static void opt_output(string const &);
-static void opt_precision(string const &);
+static void opt_metodo(string const &);
 static void opt_help(string const &);
 
 /*
@@ -62,24 +62,24 @@ static option_t options[] = {
 	{1, "i", "input", "-", opt_input, OPT_DEFAULT},
 	{1, "o", "output", "-", opt_output, OPT_DEFAULT},
 	{0, "h", "help", NULL, opt_help, OPT_DEFAULT},
-	{1, "p", "precision",NULL, opt_precision, OPT_DEFAULT},
+	{1, "m", "metodo",NULL, opt_metodo, OPT_DEFAULT},
 };
 
 //static int factor;
-static unsigned int precision;
+static string metodo;
 static istream *iss = 0;	// Input Stream (clase para manejo de los flujos de entrada)
 static ostream *oss = 0;	// Output Stream (clase para manejo de los flujos de salida)
 static fstream ifs; 		// Input File Stream (derivada de la clase ifstream que deriva de istream para el manejo de archivos)
 static fstream ofs;		// Output File Stream (derivada de la clase ofstream que deriva de ostream para el manejo de archivos)
 
-/********** *******************************************/   
+/*****************************************************/
 
 static void
-opt_precision(string const &arg)
+opt_metodo(string const &arg)
 {
 	istringstream iss(arg);
 
-	if (!(iss >> precision)
+	if (!(iss >> metodo)
 	    || !iss.eof()) {
 		cerr << "non-integer precision: "
 		     << arg
@@ -148,7 +148,6 @@ opt_output(string const &arg)
 	}
 }
 
-
 static void
 opt_help(string const &arg)
 {
@@ -156,7 +155,6 @@ opt_help(string const &arg)
 	     << endl;
 	exit(0);
 }
-
 
 void operar(istream *is, ostream *os)
 {
@@ -260,8 +258,6 @@ void operar(istream *is, ostream *os)
       num1=a;
       num2=b;
 
-      num1.set_precision(precision);
-      num2.set_precision(precision);
 
       if(s[pos_op]=='+')
         res=num1+num2;
@@ -274,6 +270,7 @@ void operar(istream *is, ostream *os)
     }
 
   }
+
   if(!is->eof()){
     cerr<<"No se encontro EOF en la entrada"<<endl;
     exit(1);
@@ -294,6 +291,9 @@ int main(int argc, char * const argv[])
 	cmdline cmdl(options);	// Objeto con parametro tipo option_t (struct) declarado globalmente. Ver l�nea 51 main.cc
 	cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
   operar(iss, oss);	    // Funci�n externa, no es un metodo de ninguna clase o estructura usada en el c�digo
+
+  cout<<"hola"<<endl;
+
 
 
   return 0;
