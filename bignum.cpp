@@ -412,7 +412,7 @@ bool operator>(const bignum& a, const bignum& b){
 /**************************************OPERADORES ENTRADA Y SALIDA***************************************/
 
 ostream& operator<<(ostream& os, const bignum& num){
-  if(num.signo==false)
+  if(num.signo==false && !(num.len==1 && num.digits[0]==0))
   { os << '-'; }
   bool aux= false;
   for(int i = 0; i< num.len;i++)

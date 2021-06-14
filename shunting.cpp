@@ -78,7 +78,12 @@ stack<string> shunting_yard(string &s){
 
       if(s[i]=='-'&& i>0){
         strchar.push_back(s[i-1]);
-        if(!contains(strchar,")0123456789")){ //Si atras no tiene numeros ni ')'
+        if(!contains(strchar,"0123456789)")){ //Si atras no tiene numeros
+          if(num[0]=='-'){
+            num[0]='+';
+            strchar="";
+            continue;
+          }
           num+="-";
           strchar="";
           continue;
@@ -185,7 +190,6 @@ string operate(stack<string> operacion){
 
   bignum res;
   stack<string> aux;
-  //stack<string> resultados;
   bignum a;
   bignum b;
 
@@ -202,10 +206,9 @@ string operate(stack<string> operacion){
   while(operacion.size()!=1){
     res.set_signo(true);
     a.set_signo(true);
-    a.set_signo(true);
+    b.set_signo(true);
 
     if(contains(operacion.top(),"0123456789")){
-
       aux.push(operacion.top());
       operacion.pop();
 
@@ -214,9 +217,9 @@ string operate(stack<string> operacion){
         operacion.pop();
 
         if(contains(operacion.top(),"+-*/")&&!contains(operacion.top(),"0123456789")){
-          a=aux.top();
-          aux.pop();
           b=aux.top();
+          aux.pop();
+          a=aux.top();
           aux.pop();
 
           if(operacion.top()=="+"){
@@ -224,7 +227,7 @@ string operate(stack<string> operacion){
             operacion.pop();
             operacion.push(res.to_string());
           }else if(operacion.top()=="-"){
-            res= b-a;
+            res= a-b;
             operacion.pop();
             operacion.push(res.to_string());
           }else if(operacion.top()=="*"){
@@ -232,7 +235,7 @@ string operate(stack<string> operacion){
             operacion.pop();
             operacion.push(res.to_string());
           }else if(operacion.top()=="/"){
-            res=b/a;
+            res=a/b;
             operacion.pop();
             operacion.push(res.to_string());
           }
