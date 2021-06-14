@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include <iostream>
 #include <string>
 #include <stack>
@@ -513,4 +512,3 @@ string operate(stack<string> operacion){
   }
   return res.to_string();
 }
->>>>>>> 647d51a631e229518a598b524f16630e07097c31
