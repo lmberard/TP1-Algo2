@@ -21,6 +21,7 @@ Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
 #include <bits/stdc++.h>
 #include "cmdline.h"
 #include "bignum.h"
+#include "shunting.h"
 using namespace std;
 
 
@@ -159,115 +160,23 @@ opt_help(string const &arg)
 void operar(istream *is, ostream *os)
 {
   string str;
-  string s;
+
   string a;
   string b;
 
-  while(getline(*iss,str))
+  while(getline(*is,str))
   {
-    a="";
-    b="";
-    s="";
+
+		string s;
+		bignum res;
+
+		stack<string> rpn;
     for(char c:str) if(!isspace(c)) s += c;
+		rpn = shunting_yard(s);
+		str = operate(rpn);
+		res=str;
 
-    if(!s.empty()){
-      //Chequeo que no haya letras ni caracteres invalidos
-      if(!(s.find_first_not_of("0123456789+-*") == string::npos))
-      {
-        cerr<<"Operacion invalida"<<endl;
-        exit(1);
-      }
-      //Chequeo que la operacion sea valida
-      size_t n = count(s.begin(),s.end(),'*');
-      if(n>1){
-        cerr<<"Operacion invalida"<<endl;
-        exit(1);
-      }
-      n += count(s.begin(),s.end(),'+');
-      n += count(s.begin(),s.end(),'-');
-
-
-      if(n==0){
-        cerr<<"Operacion invalida"<<endl;
-        exit(1);
-      }
-      if(n > 3){
-        cerr<<"Operacion invalida"<<endl;
-        exit(1);
-      }
-      if(s[s.length()-1]=='+'||s[s.length()-1]=='-'){
-        cerr<<"Operacion invalida"<<endl;
-        exit(1);
-      }
-
-      size_t pos_op;
-      if(n==1)
-      {
-        if(s[0]=='+'||s[0]=='-'){
-          cerr<<"Operacion invalida"<<endl;
-          exit(1);
-        }
-        pos_op = s.find_first_of("+-*");
-        for(size_t i=0; i<pos_op;i++)
-          a.push_back(s[i]);
-        for(size_t i=pos_op+1; i<s.length();i++)
-          b.push_back(s[i]);
-      }
-
-      if(n==2)
-      {
-        if(s[0]=='+'||s[0]=='-'){
-          pos_op = s.find_first_of("+-*",1);
-        }else{
-          pos_op = s.find_first_of("+-*");
-        }
-
-        if(s[pos_op+1]!='+'&&s[pos_op+1]!='-'&&s[0]!='-'&&s[0]!='+'){
-          cerr<<"Operacion invalida"<<endl;
-          exit(1);
-        }
-        for(size_t i=0; i<pos_op;i++)
-          a.push_back(s[i]);
-        for(size_t i=pos_op+1; i<s.length();i++)
-          b.push_back(s[i]);
-      }
-      if(n==3)
-      {
-
-        if(s[0]!='+'&&s[0]!='-'){
-          cerr<<"Operacion invalida"<<endl;
-          exit(1);
-        }
-        pos_op = s.find_first_of("+-*",1);
-
-        if(s[pos_op+1]!='+'&&s[pos_op+1]!='-'){
-          cerr<<"Operacion invalida"<<endl;
-          exit(1);
-        }
-        for(size_t i=0; i<pos_op;i++)
-          a.push_back(s[i]);
-        for(size_t i=pos_op+1; i<s.length();i++)
-          b.push_back(s[i]);
-
-      }
-
-      bignum res;
-      bignum num1;
-      bignum num2;
-
-      num1=a;
-      num2=b;
-
-
-      if(s[pos_op]=='+')
-        res=num1+num2;
-      if(s[pos_op]=='-')
-        res=num1-num2;
-      if(s[pos_op]=='*')
-        res=num1*num2;
-
-      *oss<<res<<endl;
-    }
+    *oss<<res<<endl;
 
   }
 
@@ -292,8 +201,15 @@ int main(int argc, char * const argv[])
 	cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
   operar(iss, oss);	    // Funci�n externa, no es un metodo de ninguna clase o estructura usada en el c�digo
 
-  cout<<"hola"<<endl;
-
+// bignum res;
+// bignum num1;
+// bignum num2;
+// string s="654";
+// num1 = s;
+// s="2";
+// num2 = s;
+// res=mult2(num1,num2);
+// cout<<"resultado = "<<res<<endl;
 
 
   return 0;

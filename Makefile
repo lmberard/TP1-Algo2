@@ -16,7 +16,10 @@ cmdline.o: cmdline.cpp cmdline.h
 bignum.o: bignum.cpp bignum.h
 	$(CC) $(FLAGS) bignum.o
 
-tp1: cmdline.cpp bignum.cpp tp1.cpp
+shunting.o: shunting.cpp shunting.h
+	$(CC) $(FLAGS) shunting.o
+
+tp1: cmdline.cpp bignum.cpp shunting.cpp tp1.cpp
 	$(CC) $(FLAGS) $^ -o tp1
 
 clean:

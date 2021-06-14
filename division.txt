@@ -1,0 +1,134 @@
+bignum operator/(const bignum& a, const bignum& b){
+
+  bignum result(a.len);
+  unsigned short cont = 0, bn = 0;
+
+  bignum baux;
+  baux = b;
+  baux.signo=true;
+  if(baux.is_empty()){
+    exit(1);
+  }
+
+  while(b.digits[bn] == 0){
+    bn++;
+  };
+  bignum baux2(baux.len -bn);
+  for(size_t i = 0; i < (baux.len-bn) ; i++){
+    baux2.digits[i] = baux.digits[i+bn];
+  }
+
+  if((a.len < baux2.len)){
+    return result;
+  }
+
+  bignum aux(baux2.len +1);
+  for(size_t i = 0; i < baux2.len; i++){
+    aux.digits[baux2.len -i] = a.digits[baux2.len-1 -i];
+  }
+  for(size_t j = 0;j < (a.len-baux2.len); j++){
+    while((aux > baux2) || (aux == baux2)){
+      aux = aux - baux2;
+      cont++;
+    }
+    result.digits[j+baux2.len-1] = cont;
+    cont = 0;
+    for(size_t i = 0; i < baux2.len; i++){
+      aux.digits[i] = aux.digits[i+1];
+    }
+    aux.digits[baux2.len] = a.digits[baux2.len+j];
+  }
+  while((aux > baux2) || (aux == baux2)){
+    aux = aux - baux2;
+    cont++;
+  }
+  result.digits[a.len-1] = cont;
+
+  if((!a.signo && b.signo) ||(a.signo && !b.signo) ){
+    result.signo = false;
+
+  }
+  return result;
+}
+
+bool operator==(const bignum&a, const bignum&b)
+{
+  int an = 0, bn = 0;
+  while(a.digits[an] == 0){
+    an++;
+  }
+  while(b.digits[bn] == 0){
+    bn++;
+  }
+
+
+  if(a.signo==b.signo)
+  {
+    for(size_t i = 0; i < min((a.len-an),(b.len-bn)); i++)
+    {
+      if(a.digits[i+an]!=b.digits[i+bn])
+        return false;
+    }
+    return true;
+  }
+  return false;
+}
+
+bool operator<(const bignum& a, const bignum& b)
+{
+  //signos distintos
+ if(!a.signo && b.signo){
+   return true;
+ }
+ else if(a.signo && !b.signo){
+   return false;
+ }
+  int an = 0, bn = 0;
+  while(a.digits[an] == 0){
+    an++;
+  }
+  while(b.digits[bn] == 0){
+    bn++;
+  }
+
+  if( (a.len - an) > (b.len - bn)){
+    return false;}
+  if( (a.len - an) < (b.len - bn)){
+    return true;}
+  for(size_t i = 0; i < (a.len-an); i++){
+    if(a.digits[i+an] > b.digits[i+bn])
+      return false;
+    if(a.digits[i+an] < b.digits[i+bn])
+      return true;
+  }
+  return true;
+}
+bool operator>(const bignum& a, const bignum& b)
+{
+  if(!a.signo && b.signo){
+   return false;
+ }
+ else if(a.signo && !b.signo){
+   return true;
+ }
+
+  int an = 0, bn = 0;
+  while(a.digits[an] == 0){
+    an++;
+  }
+  while(b.digits[bn] == 0){
+    bn++;
+  }
+
+  if((a.len - an) < (b.len - bn))
+    return false;
+  if((a.len - an) > (b.len - bn)){
+    return true;}
+  for(size_t i = 0; i < (b.len-bn); i++){
+    if(a.digits[i+an] > b.digits[i+bn])
+      return true;
+    if(a.digits[i+an] < b.digits[i+bn])
+      return false;
+  }
+  return false;
+}

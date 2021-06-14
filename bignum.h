@@ -14,7 +14,6 @@ Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
 #include<string>
 using namespace std;
 
-
 #ifndef BIGNUM_INCLUDED
 #define BIGNUM_INCLUDED
 
@@ -22,31 +21,36 @@ using namespace std;
 
 class bignum
 {
-  //friend class alg1;
-  //friend class alg2;
   private:
     unsigned short *digits;
     unsigned short len;
-    bool signo; //True sea positivo y False sea Negativo
+    bool signo;
+
+    friend bool is_zero(const bignum&);
+    friend bignum truelen(const bignum&);
+    friend bignum mult2(const bignum&,const bignum&);
+    friend bignum llenar(const bignum&, int);
+    friend bignum shift1(const bignum &,int);
+    friend bignum operator/(const bignum&, int);
+    friend bignum operator%(const bignum&, int);
 
   public:
 
-    bignum(void);
+    bignum();
     bignum(const unsigned short);
-    bignum(const string&);
     ~bignum();
-
     void set_signo(bool);
     bool get_signo();
     unsigned char get_len();
-    void set_precision(const unsigned short);
+    string to_string();
+
+    const bignum& operator=(const bignum&);
+    const bignum& operator=(const string&);
 
     friend bignum operator+(const bignum&, const bignum&);
     friend bignum operator-(const bignum&, const bignum&);
-    friend bignum operator-(const bignum&);
-    friend bignum operator*(const bignum& a, const bignum& b);
-    const bignum& operator=(const bignum&);
-    const bignum& operator=(const string&);
+    friend bignum operator*(const bignum&, const bignum&);
+    friend bignum operator/(const bignum&, const bignum&);
 
     friend bool operator==(const bignum&, const bignum&);
     friend bool operator<(const bignum&, const bignum&);
@@ -56,22 +60,5 @@ class bignum
     friend std::istream& operator>>(std::istream&, bignum&);
 };
 
-// class alg1: public bignum{
-//   public:
-//     virtual ~alg1(){}
-//     virtual bignum operator*(const bignum& a, const bignum& b){
-//       cout<<"default"<<endl;
-//       return b;
-//     }
-// }
-//
-// class alg2: public bignum{
-//   public:
-//     virtual ~alg2(){}
-//     virtual bignum operator*(const bignum& a, const bignum& b){
-//       cout<<"Karatsuba"<<endl;
-//       return b;
-//     }
-// };
 
 #endif

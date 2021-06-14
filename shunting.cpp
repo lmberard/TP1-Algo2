@@ -1,186 +1,257 @@
 #include <iostream>
 #include <string>
+#include <stack>
+#include <queue>
 #include "bignum.h"
+#include "shunting.h"
 using namespace std;
 
-class stack{
 
-  private:
-    size_t tos_;
-    size_t len_;
-    string *ptr_;
-  public:
-	   stack();
-	   stack(size_t);
-	   ~stack();
-
-	   string pull();
-	   void push(const string &);
-	   bool empty() const;
-	   size_t length() const;
-};
-
-
-stack::stack()
-	: tos_(0),
-	  len_(0),
-	  ptr_(0)
-{
+bool contains(string s, string cont){
+  if(s.find_first_of(cont) != string::npos){
+    return true;
+  }else
+    return false;
 }
 
-stack::stack(size_t len)
-	: tos_(0),
-	  len_(0),
-	  ptr_(0)
-{
-	ptr_ = new string[len_ = len];
+size_t count_op(stack<string> s){
+  size_t count=0;
+  stack<string> aux;
+
+  while(!s.empty()){
+    if(contains(s.top(),"+-*/")){
+      aux.push(s.top());
+      s.pop();
+      count++;
+    }else{
+      aux.push(s.top());
+      s.pop();
+    }
+  }
+
+  while(!aux.empty()){
+    s.push(aux.top());
+    aux.pop();
+  }
+
+  return count;
 }
 
-stack::~stack(){delete[] ptr_;}
+size_t count_num(stack<string> s){
+  size_t count=0;
+  stack<string> aux;
 
-string stack::pull(){return ptr_[--tos_];}
+  while(!s.empty()){
+    if(contains(s.top(),"0123456789")){
+      aux.push(s.top());
+      s.pop();
+      count++;
+    }else{
+      aux.push(s.top());
+      s.pop();
+    }
+  }
 
-void stack::push(const string &top){ptr_[tos_++] = top;}
+  while(!aux.empty()){
+    s.push(aux.top());
+    aux.pop();
+  }
 
-bool stack::empty() const{return tos_ == 0 ? true : false;}
-
-size_t stack::length() const{return tos_;}
-
-class queue{
-  private:
-    stack egress_;
-    stack ingress_;
-  public:
-	  queue();
-    queue(size_t);
-	  queue &operator=(const queue &);
-	  ~queue();
-
-	  string pull();
-	  void push(const string &);
-	  bool empty() const;
-	  size_t length() const;
-};
-
-queue::queue(){}
-
-queue::queue(size_t len)
-:
-	egress_(len),
-  ingress_(len)
-{
+  return count;
 }
 
-queue::~queue(){}
-
-string queue::pull()
-{
-	if (egress_.empty()) {
-		while (ingress_.empty() == false)
-			egress_.push(ingress_.pull());
-	}
-	return egress_.pull();
-}
-
-void queue::push(const string &item){ingress_.push(item);}
-
-bool queue::empty() const{return egress_.empty() && ingress_.empty() ? true : false;}
-
-size_t queue::length() const{return egress_.length() + ingress_.length();}
-
-
-int main(){
-
-  /*COMENTARIOS!! las pilas y colas andan bien pero habría que robustecerlas mucho más, no están contamplados muchos casos de error, eso
-  lo puedo hacer, solo queria probar la funcionalidad en este caso. Lo mismo con SHUNTING YARD sólo lo probe con una cadena perfecta sin
-  errores ni espacios, las validaciones las pensamos despues. Lo que necesito que alguien haga si o si es la parte marcada en ((1*)) */
-  //cadena de prueba:
-  string s = "(11a+2)/((38+5)*(2+3))";
-
-/***********************SHUNTING YARD*********************************/
-  size_t contador= 0;
-  queue c(s.length());
-  stack p(s.length());
+stack<string> shunting_yard(string &s){
+  queue<string> c;
+  stack<string> p;
+  string strchar="", num="";
 
   for(size_t i = 0; i < s.length(); i++){
-      if('(' == s[i])
-        contador = 0;
+      if('(' == s[i]){
+        p.push("(");
+        continue;
+      }
 
+      if(s[i]=='-'&& i==0){
+          num+="-";
+          continue;
+      }
 
-      string strchar;
-      string num="";
+      if(s[i]=='-'&& i>0){
+        strchar.push_back(s[i-1]);
+        if(!contains(strchar,")0123456789")){ //Si atras no tiene numeros ni ')'
+          num+="-";
+          strchar="";
+          continue;
+        }else {//si tiene numeros atras o ')'
+          strchar="";
+          strchar.push_back(s[i]);
+          if(!p.empty() && strchar=="-"){
+            if(contains(p.top(),"+-*/")&&!contains(p.top(),"0123456789")){
+              while(!p.empty()){
+                if(p.top()=="(")
+                  break;
+                c.push(p.top());
+                p.pop();
+              }
+              p.push(strchar);
+              strchar="";
+              continue;
+            }
+          }
+          p.push("-");
+          strchar="";
+          continue;
+        }
+      }
+
       strchar.push_back(s[i]);
 
-      while(strchar.find_first_of("0123456789") != string::npos)
-      {
-        num.push_back(s[i]);
-        i++;
+      if(contains(strchar,"0123456789")){
+
+        num+=strchar;
         strchar="";
-        strchar.push_back(s[i]);
-        if(strchar.find_first_of("0123456789") == string::npos){
+        if(i!=s.length()-1){
+          strchar.push_back(s[i+1]);
+          if(!contains(strchar,")+-*/")){
+            strchar="";
+            continue;
+          }else{
+            c.push(num);
+            strchar="";
+            num="";
+            continue;
+          }
+        }else{
           c.push(num);
-          num = "";
+          strchar="";
+          num="";
+          continue;
         }
       }
 
 
-      if((strchar.find_first_of("+-*/") != string::npos)){
-        contador++;
+      if(contains(strchar,"+*/")){
+
+        if(!p.empty() && strchar=="+"){
+          if(contains(p.top(),"+-*/")&&!contains(p.top(),"0123456789")){
+            while(!p.empty()){
+              if(p.top()=="(")
+                break;
+              c.push(p.top());
+              p.pop();
+            }
+            p.push(strchar);
+            strchar="";
+            continue;
+          }
+        }
         p.push(strchar);
+        strchar="";
+        continue;
       }
 
 
-      if(')' == s[i])
-        while(contador){
-          //SI LA COLA ALMACENA BIGNUMS ENTONCES NO SE VA A PODER PULLEAR EL CONTENIDO DE LA PILA EN LA COLA
-          //SE TIENE QUE IR REALIZANDO LA OPERACION A MEDIDA QUE SE EJECUTA SHUNTING YARD ASI NO SE ALMACENAN
-          //CARACTERES DE OPERACION, SINO SOLAMENTE BIGNUMS!!
-          c.push(p.pull());
-          contador--;
+      if(s[i] == ')'){
+        while(p.top()!="("){
+          c.push(p.top());
+          p.pop();
         }
-  }
-  while(!p.empty())
-    c.push(p.pull());
-
-/*************************************************************************/
-
-  cout << s << endl;
-  for(size_t i = 0; i < 11; i++)
-    cout << c.pull()<<endl;
-  cout << endl;
-
-/*
-    stack p2(s.length());
-
-    bignum res;
-    bignum num1;
-    bignum num2;
-    char aux;
-
-    for(size_t i = 0; i < s.length(); i++){
-      //ACA LO MISMO, LA COLA ALMACENA BIGNUMS
-      aux = c.pull();
-      if( '0' == aux || '1' == aux || '2' == aux || '3' == aux || '4' == aux || '5' == aux || '6' == aux || '7' == aux || '8' == aux || '9' == aux){
-        //ESTA PILA DEBERIA ALMACENAR BIGNUMS!!
-        p2.push(aux);
+        p.pop();
+        strchar="";
       }
-      //ESTE CODIGO FUE PENSADO PARA CUANDO LA COLA ALMACENABA CHARSSSS. ESTA PARTE DE DECISION DEL OPERADOR SE DEBE METER ADENTRO DE SHUNTING YARD
-      if(aux=='+')
-        num1 = p2.pull();
-        num2 = p2.pull();
-        res = num1 + num2;
-        //p2.push(res);
-      if(aux=='-')
-        num1 = p2.pull();
-        num2 = p2.pull();
-        res = num1 - num2;
-        //p2.push(res);
-      if(aux=='*')
-        num1 = p2.pull();
-        num2 = p2.pull();
-        res = num1 * num2;
-        //p2.push(res);
+  }
+  while(!p.empty()){
+    c.push(p.top());
+    p.pop();
+  }
+
+  stack<string> operacion;
+  stack<string> aux;
+
+  while(!c.empty()){
+    aux.push(c.front());
+    cout<<aux.top()<<endl;
+    c.pop();
+  }
+
+  while(!aux.empty()){
+    operacion.push(aux.top());
+    aux.pop();
+  }
+
+  return operacion;
+}
+
+string operate(stack<string> operacion){
+
+  bignum res;
+  stack<string> aux;
+  //stack<string> resultados;
+  bignum a;
+  bignum b;
+
+  if(count_num(operacion)==1){
+    while(!operacion.empty()){
+      if(contains(operacion.top(),"0123456789")){
+        return operacion.top();
+      }
+      operacion.pop();
     }
-*/
-  return 0;
+  }
+
+
+  while(operacion.size()!=1){
+    res.set_signo(true);
+    a.set_signo(true);
+    a.set_signo(true);
+
+    if(contains(operacion.top(),"0123456789")){
+
+      aux.push(operacion.top());
+      operacion.pop();
+
+      if(contains(operacion.top(),"0123456789")){
+        aux.push(operacion.top());
+        operacion.pop();
+
+        if(contains(operacion.top(),"+-*/")&&!contains(operacion.top(),"0123456789")){
+          a=aux.top();
+          aux.pop();
+          b=aux.top();
+          aux.pop();
+
+          if(operacion.top()=="+"){
+            res= a+b;
+            operacion.pop();
+            operacion.push(res.to_string());
+          }else if(operacion.top()=="-"){
+            res= b-a;
+            operacion.pop();
+            operacion.push(res.to_string());
+          }else if(operacion.top()=="*"){
+            res= a*b;
+            operacion.pop();
+            operacion.push(res.to_string());
+          }else if(operacion.top()=="/"){
+            res=b/a;
+            operacion.pop();
+            operacion.push(res.to_string());
+          }
+        }else{
+          operacion.push(aux.top());
+          aux.pop();
+          continue;
+        }
+      }else{
+        //error no hay 2 numeros seguidos
+      }
+    }
+
+    while(!aux.empty()){
+      operacion.push(aux.top());
+      aux.pop();
+    }
+
+  }
+  return res.to_string();
 }
