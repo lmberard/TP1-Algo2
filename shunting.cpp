@@ -171,7 +171,6 @@ stack<string> shunting_yard(string &s){
 
   while(!c.empty()){
     aux.push(c.front());
-    cout<<aux.top()<<endl;
     c.pop();
   }
 
