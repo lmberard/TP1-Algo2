@@ -20,7 +20,7 @@ bignum::~bignum(){
 }
 
 /*************************FUNCIONES PRIVADAS****************************************************************/
-bignum truelen(const bignum& right){
+/*bignum truelen(const bignum& right){
 
   bignum res;
   if(is_zero(right)){
@@ -35,7 +35,7 @@ bignum truelen(const bignum& right){
   res2.signo = right.signo;
   res = res2;
   return res;
-}
+}*/
 
 bool is_zero(const bignum& a){
   for(size_t i = 0; i < a.len; i++){
@@ -133,7 +133,7 @@ bignum operator+(const bignum& a, const bignum& b){
     result.signo = false;
   }
   if(aux < baux){
-    result = b + a;
+    result = baux + aux;
     return result;
   }
   for(size_t i = 0; i < min(aux.len,baux.len); i++){
@@ -411,38 +411,101 @@ istream& operator>>(istream& is, bignum& num){
 
 /*******************************************KARATSUBA***************************************************/
 
+// NO ES LA DIVISION
+//s es la cantidad de digitos menos significativos que le saco a
+// "right", esto me da el a1 de
+//  a = a1*10^s + a2 ,
+//  s=n/2, n el largo del bignum
 bignum operator/(const bignum& right, int s){
   bignum res(right.len-s);
   res.signo=right.signo;
   if(s>=1)
   {
     for(int i=0; i<res.len; i++)
-        {res.digits[i]=right.digits[i];}
+        {res.digits[i]=right.digits[i];
+        cout<<"res.digits["<<i<<"] / "<<res.digits[i]<<endl;
+        }
     return res;
   }
   return res;
 }
-
+//No es el RESTO, es el complemento del anterior
+//s es el largo del bignum a devolver con los s digitos menos
+// significativos de right me dá el a2 de
+//a = a1*10^s + a2 , s=n/2, n el largo del bignum
 bignum operator%(const bignum& right, int s){
   bignum res(s);
   res.signo=right.signo;
   if(s>=1)
   {
     for(int i=right.len-s; i<right.len; i++)
-      {res.digits[i-(right.len-s)]=right.digits[i];}
+      {res.digits[i-(right.len-s)]=right.digits[i];
+      cout<<"res.digits["<<i-(right.len-s)<<"] % "<<res.digits[i-(right.len-s)]<<endl;
+      }
+    //cout<<"salgo del for y res vale "<<res<<endl;
     return res;
   }
   return res;
 }
 
+//me coloca los ceros al principio necesarios para
+//poder hacer el algoritmo de karatsuba
+//así ambos bignum tienen el mismo largo
+// diff es la diferencia de largos entre los bignums
+//right es el bignum a agregarle ceros
 bignum llenar(const bignum& right, int diff){
   bignum aux(right.len + diff);
   aux.signo= right.signo;
   for(int i=diff; i<aux.len; i++)
-      {aux.digits[i]= right.digits[i-diff];}
+      {aux.digits[i]= right.digits[i-diff];
+      cout<<"aux.digits["<< i-diff <<"] llenar "<<aux.digits[i-diff]<<endl;
+    }
   return aux;
 }
 
+//saca los ceros a izquierda y corrige el len
+bignum truelen(const bignum& right){
+  int i;
+  bignum res(1);
+  for( i=0;  i<right.len && right.digits[i]==0   ; i++);
+
+  if(i==right.len){
+    cout <<"res.len truelen1 "<< res.len << endl;
+    cout <<"res.digits[0] truelen1 "<< res.digits[0] << endl;
+  //  cout <<"res.digits[1] "<< res.digits[1] << endl;
+    res.signo=right.signo;
+    return res;
+  }
+  else if(i==0){
+    //cortó en la primera y el número es correcto
+    res = right;
+    cout <<"res.len truelen2 "<< res.len << endl;
+    for(int j=0; j<res.len; j++)
+      cout<<"res.digits["<< j <<"] truelen2 "<<res.digits[j]<<endl;
+    return res;
+  }
+  else{
+    //el numero tiene ceros adelante
+    //achicar digits y ajustar len de res
+    unsigned short *aux;
+    aux=new unsigned short[right.len-i];
+    delete[]res.digits;
+    res.len=right.len-i;
+    res.digits=aux;
+    res.signo = right.signo;
+    for(int j=0; j<res.len; j++)
+    {
+      res.digits[j]=right.digits[i+j];
+      cout<<"right.digits["<< i+j <<"] truelen3 "<<right.digits[i+j]<<endl;
+      cout<<"res.digits["<< j <<"] truelen3 "<<res.digits[j]<<endl;
+    }
+    cout<< "res.len truelen3 "<<res.len<<endl;
+    return res;
+  }
+}
+
+//se usa sólo para hacer la cuenta final sustituye el 10^s
+// del algoritmo, si se aplica dos veces equivale a 10^(2s)
 bignum shift1(const bignum &right, int s){
   bignum aux(right.len+s);
   aux.signo=right.signo;
@@ -454,54 +517,114 @@ bignum shift1(const bignum &right, int s){
   return aux;
 }
 
+//mult por karatsuba
 bignum mult2(const bignum& u, const bignum& v){
+//agregar mas prints
+cout << "empieza mult("<< u <<","<<v<<")"<<endl;
   //modifico los bignum, me saca los ceros a izquierda y corrige el len
-  bignum u1 = truelen(u);
-  bignum v1 = truelen(v);
 
+  bignum u1 = truelen(u);
+//  cout << "u1 es "<< u1 <<endl;
+  bignum v1 = truelen(v);
+//  cout << "v1 es "<< v1 <<endl;
+//si alguno es cero devuelvo cero con signo correspondiente
+/*
+  if(u1.digits[0]==0 || v1.digits[0]==0){
+    bignum aux(1);
+    if(!u1.signo && !v1.signo){
+      aux.signo = true; //ambos negativos
+    }
+    else
+      {aux.signo = u1.signo && v1.signo;} //ambos positivos o tienen distinto signo
+    return aux;
+  }
+ */
   int a = u1.len;
   int b = v1.len;
 
   int n = max(a,b);
+  cout << "n "<< n << endl;
 
   bignum v2(n);
   bignum u2(n);
   //if a > b, llenar de ceros a izq a v
-  if(a>b)
+
+  if (a==1 && b==1)
   {
+    u2 = u1;
+    v2 = v1;
+  }
+  else if(a>b)
+  {
+    cout<< "empiaza llenar "<<endl;
     v2 = llenar(v1,a-b);
     u2 = u1;
+
   }
   //if b>a, llenar de ceros a izq a u
   else if(b>a)
-  {
-    u2 = llenar(u1,b-a);
+  { cout<< "empiaza llenar "<<endl;
+    u2 = llenar(u1,b-a); //llenar con ceros sin errores
     v2 = v1;
   }
   else{
     u2 = u1;
     v2 = v1;
   }
+
+  //pruebas de los contenidos de u2 y v2
+  cout << "u termina siendo k "<< u2 <<endl;
+  cout << "v termina siendo k "<< v2 <<endl;
+  for(int i=0; i< u2.len; i++){
+  cout<<"u2.digits["<<i<<"] k "<<u2.digits[i]<<endl;
+  cout<<"v2.digits["<<i<<"] k "<<v2.digits[i]<<endl;
+  }
+
   int L = 1;
   //si n es de largo mayor a 1, hace la recursividad
   //sino, es de largo 1 (caso base) y devuelve la multiplicación
   if(n>L){
     int s = n/2;
-    //u2 = w*10^s + x
-    bignum w = u2/s;  // w = u2 / 10^s
-    bignum x = u2%s;  // x = u2 % 10^s
-    //v2= y*10^s + z
-    bignum y = v2/s;  // y = v2 / 10^s
-    bignum z = v2%s;  // z = v2 % 10^s
-    //consigo los parámetros de karatsuba
-    bignum r = mult2(w+x,y+z);
-    bignum p = mult2(w,y);
+    cout << "s k "<< s << endl;
+    bignum w = u2/s;
+    cout << "u/s k "<< w << endl;
+    bignum x = u2%s;
+    cout << "u%s k "<< x << endl;
+    bignum y = v2/s;
+    cout << "v/s k "<< y << endl;
+    bignum z = v2%s;
+    cout << "v%s k "<< z << endl;
+//probar truelen en rpq o en los shifts
+    cout << "r"<< endl;
+    bignum r = mult2(w+x,y+z);  //
+    cout << "p"<<endl;
+    bignum p = mult2(w,y);      //
+//    bignum aux;
+//    aux = r-p;
+    cout <<"q"<<endl;
     bignum q = mult2(x,z);
-    //     p * 10^(2s)                    + (r-p-q) * 10^s           + q
+//    bignum aux2;
+//    aux2 = aux - q;
+     //
+    //bignum res =
+    //cout << "res.len k" << res.len << endl;
+/*    for(int j=0; j<res.len; j++)
+    {
+      cout<<"res.digits["<< j <<"] "<<res.digits[j]<<endl;
+    }    */
+    cout << "termina mult("<< u2 <<","<<v2<<")"<<endl;
+    cout <<"s="<<s<<" p="<<p<< " q="<<q <<" r="<<r<<endl;
+    cout <<"p * 10^(2s)           + (r-p-q) * 10^s    + q" << endl;
+    cout <<  "shift1(shift1(p,s),s) " << shift1(shift1(p,s),s)<<endl;
+    cout << "q+p = " << q+p <<endl;
+    cout << "r-(p+q) = " << r-(p+q) <<endl;
+    cout << "shift1(r-p-q,s) " << shift1(r-p-q,s) << endl;
+    cout << "resultado con shifts " << shift1(shift1(p,s),s) + shift1(r-p-q,s) + q<<endl;
     return truelen(shift1(shift1(p,s),s)) + truelen(shift1(r-p-q,s)) + truelen(q);
-
+    //     p * 10^(2s)           + (r-p-q) * 10^s    + q
   }
-  else{             //caso base si n=1
+  else{
+    cout << "caso base u2*v2 " << u2<<" * "<<v2<<" es "<< u2*v2<<endl;
     return u2*v2;} //acá estoy abusando del * que teníamos
                     // capaz deberia crear un bignum resultado
                     // y darle el valor, pero eso jode en strategy
