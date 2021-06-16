@@ -25,16 +25,9 @@ class multiply_interface;
 
 class bignum
 {
-<<<<<<< HEAD
     friend class multiply_interface;
   private:
     friend class standard;
-=======
-  friend class multiply_interface;
-  //private:
-  public:
-
->>>>>>> 6a25f85f88a3be9fe41b8dbe151c36882a74fdeb
     bool signo;
     unsigned short len;
     unsigned short *digits;
@@ -49,11 +42,7 @@ class bignum
     friend bignum operator%(const bignum&, int);
 
 
-<<<<<<< HEAD
   public:
-=======
-  //public:
->>>>>>> 6a25f85f88a3be9fe41b8dbe151c36882a74fdeb
 
     bignum();
     bignum(const unsigned short);
