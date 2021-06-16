@@ -1,14 +1,12 @@
+#ifndef SHUNTING_INCLUDED
+#define SHUNTING_INCLUDED
+
 #include<iostream>
 #include<string>
 #include "bignum.h"
 using namespace std;
 
-
-#ifndef SHUNTING_INCLUDED
-#define SHUNTING_INCLUDED
-
-
-string operate(stack<string>);
+string operate(stack<string>, string);
 stack<string> shunting_yard(string &s);
 bool contains(string s, string cont);
 size_t count_op(stack<string>);

@@ -3,20 +3,88 @@
 #include <algorithm>
 using namespace std;
 
+
+multiply_interface* bignum::mult=new standard();
+int bignum::instances = 0;
+
 /**************************CONSTRUCTORES Y DESTRUCTORES************************************************/
 bignum::bignum()
   : signo(true),
     len(1)
-{digits = new unsigned short[len]();}
+{
+  digits = new unsigned short[len]();
+  instances++;
+}
 
 bignum::bignum(const unsigned short a)
   : signo(true),
     len(a)
-{digits = new unsigned short[len]();}
+{
+  digits = new unsigned short[len]();
+  instances++;
+}
+
+bignum::bignum(const string& s){
+  string str;
+  instances++;
+  for(char c:s) if(!isspace(c)) str += c ;
+  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+')){
+    cerr<<"Asignacion de numero invalida"<<endl;
+    exit(1);
+  }
+  bool hay_signo=false;
+  if(str[0]=='-'){signo=false;hay_signo=true;}
+  if(str[0]=='+'){signo=true;hay_signo=true;}
+
+  unsigned short num = 0;
+  for(size_t i =0; i < str.length()-hay_signo;i++){
+    num += str[i+hay_signo]-ASCII_FIX;
+  }
+  unsigned short *aux;
+
+  if(!num){
+    aux = new unsigned short[1];
+    len = 1;
+    digits = aux;
+    digits[0] = 0;
+    return;
+  }
+  size_t z = 0;
+  while(str[z++ +hay_signo] == '0'){};z--;
+
+  aux=new unsigned short[str.length()-hay_signo-z];
+  len=str.length()-hay_signo-z;
+  digits=aux;
+
+  for(int i=0; i< len; i++)
+      digits[len-1-i]=str[len+z+hay_signo-i-1]-ASCII_FIX;
+}
 
 bignum::~bignum(){
   if(digits)
   {delete[] digits;}
+  this->instances--;
+  if(!this->instances){
+    delete mult;
+    mult=NULL;
+  }
+}
+
+void bignum::set_mult_strategy(multiply_interface* m){
+  if(mult)
+    delete mult;
+  this->mult=m;
+}
+
+bignum::bignum(const bignum& right){
+  if(&right !=this)
+  {
+    signo=right.signo;
+    digits=new unsigned short[right.len];
+    len=right.len;
+    for(int i=0; i<len; i++)
+      {digits[i]=right.digits[i];}
+  }
 }
 
 /*************************FUNCIONES PRIVADAS****************************************************************/
@@ -125,7 +193,7 @@ const bignum& bignum::operator=(const string& right){
   }
   size_t z = 0;
   while(str[z++ +hay_signo] == '0'){};z--;
-  /*******************************************************///Y A TODO SE LE AGREGA Z
+  /*******************************************************///Y A TOoDO SE LE AGREGA Z
   aux=new unsigned short[str.length()-hay_signo-z];
   delete[]digits;
   len=str.length()-hay_signo-z;
@@ -231,37 +299,7 @@ bignum operator-(const bignum& a, const bignum& b){
 }
 
 bignum operator*(const bignum& a, const bignum& b){
-
-  unsigned short n = a.len;
-  unsigned short m = b.len;
-  unsigned short carry = 0;
-  bignum aux(n+m);
-  bignum aux2(n+m);
-  bignum result(n+m);
-
-  for(size_t j = 0; j < m; j++){
-    for(size_t i = 0; i < n; i++){
-      aux.digits[n+m-1-i-j] = a.digits[n-1-i]*b.digits[m-1-j] + carry;
-      if(aux.digits[n+m-1-i-j] >= 10){
-        carry = aux.digits[n+m-1-i-j]/10;
-        aux.digits[n+m-1-i-j] -=  10*(aux.digits[n+m-1-i-j]/10);
-      }
-      else carry = 0;
-    }
-    aux.digits[m-1-j] = carry;
-
-  for(size_t k = 0; k < j; k++){
-    aux.digits[n+m-1-k] = 0;
-  }
-    aux2 = aux2 + aux;
-    carry = 0;
-  }
-
-  result = aux2;
-  if((!a.signo && b.signo) ||(a.signo && !b.signo) ){
-    result.signo = false;
-  }
-  return result;
+  return a.mult->multiply(a,b);
 }
 
 bignum operator/(const bignum& a, const bignum& b){
@@ -279,18 +317,20 @@ bignum operator/(const bignum& a, const bignum& b){
   }
 
   bignum aux(b.len);
-  for(size_t i = 0; i < aux.len; i++){
+  for(int i = 0; i < aux.len; i++){
     aux.digits[aux.len-1 -i] = a.digits[b.len-1 -i];
   }
 
-  for(size_t j = 0;j < (a.len-b.len); j++){
+  for(int j = 0;j < (a.len-b.len); j++){
     while((aux > b) || (aux == b)){
       aux = aux - b;
       cont++;
     }
     result.digits[j+b.len-1] = cont;
     cont = 0;
-    aux = aux*diez;
+
+    aux = aux * diez;
+
     aux.digits[aux.len-1] = a.digits[b.len+j];
   }
   while((aux > b) || (aux == b)){
@@ -414,11 +454,9 @@ bool operator>(const bignum& a, const bignum& b){
 ostream& operator<<(ostream& os, const bignum& num){
   if(num.signo==false && !(num.len==1 && num.digits[0]==0))
   { os << '-'; }
-  bool aux= false;
   for(int i = 0; i< num.len;i++)
   {
     os << num.digits[i];
-    aux=true;
   }
   return os;
 }
@@ -478,57 +516,4 @@ bignum shift1(const bignum &right, int s){
   for( i=right.len; i<aux.len;i++)
     {aux.digits[i]=0;}
   return aux;
-}
-
-bignum mult2(const bignum& u, const bignum& v){
-  //modifico los bignum, me saca los ceros a izquierda y corrige el len
-  bignum u1 = truelen(u);
-  bignum v1 = truelen(v);
-
-  int a = u1.len;
-  int b = v1.len;
-
-  int n = max(a,b);
-
-  bignum v2(n);
-  bignum u2(n);
-  //if a > b, llenar de ceros a izq a v
-  if(a>b)
-  {
-    v2 = llenar(v1,a-b);
-    u2 = u1;
-  }
-  //if b>a, llenar de ceros a izq a u
-  else if(b>a)
-  {
-    u2 = llenar(u1,b-a);
-    v2 = v1;
-  }
-  else{
-    u2 = u1;
-    v2 = v1;
-  }
-  int L = 1;
-  //si n es de largo mayor a 1, hace la recursividad
-  //sino, es de largo 1 (caso base) y devuelve la multiplicación
-  if(n>L){
-    int s = n/2;
-    //u2 = w*10^s + x
-    bignum w = u2/s;  // w = u2 / 10^s
-    bignum x = u2%s;  // x = u2 % 10^s
-    //v2= y*10^s + z
-    bignum y = v2/s;  // y = v2 / 10^s
-    bignum z = v2%s;  // z = v2 % 10^s
-    //consigo los parámetros de karatsuba
-    bignum r = mult2(w+x,y+z);
-    bignum p = mult2(w,y);
-    bignum q = mult2(x,z);
-    //     p * 10^(2s)                    + (r-p-q) * 10^s           + q
-    return truelen(shift1(shift1(p,s),s)) + truelen(shift1(r-p-q,s)) + truelen(q);
-
-  }
-  else{             //caso base si n=1
-    return u2*v2;} //acá estoy abusando del * que teníamos
-                    // capaz deberia crear un bignum resultado
-                    // y darle el valor, pero eso jode en strategy
 }

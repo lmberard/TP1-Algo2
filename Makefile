@@ -13,13 +13,19 @@ all:
 cmdline.o: cmdline.cpp cmdline.h
 	$(CC) $(FLAGS) cmdline.o
 
-bignum.o: bignum.cpp bignum.h
+bignum.o: bignum.cpp bignum.h multiply_interface.h
 	$(CC) $(FLAGS) bignum.o
+
+karatsuba.o: karatsuba.cpp karatsuba.h
+	$(CC) $(FLAGS) shunting.o
+
+standard.o: standard.cpp standard.h
+	$(CC) $(FLAGS) shunting.o
 
 shunting.o: shunting.cpp shunting.h
 	$(CC) $(FLAGS) shunting.o
 
-tp1: cmdline.cpp bignum.cpp shunting.cpp tp1.cpp
+tp1: cmdline.cpp bignum.cpp shunting.cpp tp1.cpp karatsuba.cpp standard.cpp
 	$(CC) $(FLAGS) $^ -o tp1
 
 clean:

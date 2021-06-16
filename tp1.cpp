@@ -63,7 +63,7 @@ static option_t options[] = {
 	{1, "i", "input", "-", opt_input, OPT_DEFAULT},
 	{1, "o", "output", "-", opt_output, OPT_DEFAULT},
 	{0, "h", "help", NULL, opt_help, OPT_DEFAULT},
-	{1, "m", "metodo",NULL, opt_metodo, OPT_DEFAULT},
+	{1, "m", "metodo","standard", opt_metodo, OPT_DEFAULT},
 };
 
 //static int factor;
@@ -92,6 +92,11 @@ opt_metodo(string const &arg)
 	if (iss.bad()) {
 		cerr << "cannot read integer precision."
 		     << endl;
+		exit(1);
+	}
+
+	if(metodo != "karatsuba" && metodo!= "standard"){
+		cerr<<"Metodo invalido"<<endl;
 		exit(1);
 	}
 }
@@ -173,7 +178,7 @@ void operar(istream *is, ostream *os)
 		stack<string> rpn;
     for(char c:str) if(!isspace(c)) s += c;
 		rpn = shunting_yard(s);
-		str = operate(rpn);
+		str = operate(rpn, metodo);
 		res=str;
 
     *oss<<res<<endl;

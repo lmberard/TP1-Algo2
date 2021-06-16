@@ -4,6 +4,8 @@
 #include <queue>
 #include "bignum.h"
 #include "shunting.h"
+#include "karatsuba.h"
+#include "standard.h"
 using namespace std;
 
 
@@ -186,12 +188,18 @@ stack<string> shunting_yard(string &s){
   return operacion;
 }
 
-string operate(stack<string> operacion){
+string operate(stack<string> operacion, string metodo){
 
   bignum res;
-  stack<string> aux;
   bignum a;
   bignum b;
+  stack<string> aux;
+
+  if(metodo=="karatsuba"){
+    a.set_mult_strategy(new karatsuba());
+  }else{
+    a.set_mult_strategy(new standard());
+  }
 
   if(count_num(operacion)==1){
     while(!operacion.empty()){
@@ -202,11 +210,10 @@ string operate(stack<string> operacion){
     }
   }
 
-
   while(operacion.size()!=1){
-    res.set_signo(true);
-    a.set_signo(true);
-    b.set_signo(true);
+    res = "+0";
+    a = "+0";
+    b = "+0";
 
     if(contains(operacion.top(),"0123456789")){
       aux.push(operacion.top());
@@ -231,9 +238,9 @@ string operate(stack<string> operacion){
             operacion.pop();
             operacion.push(res.to_string());
           }else if(operacion.top()=="*"){
-            res= a*b;
-            operacion.pop();
-            operacion.push(res.to_string());
+              res = a * b;
+              operacion.pop();
+              operacion.push(res.to_string());
           }else if(operacion.top()=="/"){
             res=a/b;
             operacion.pop();
