@@ -202,19 +202,9 @@ void operar(istream *is, ostream *os)
 int main(int argc, char * const argv[])
 {
 
-	cmdline cmdl(options);	// Objeto con parametro tipo option_t (struct) declarado globalmente. Ver l�nea 51 main.cc
+	cmdline cmdl(options);	// Objeto con parametro tipo option_t (struct) declarado globalmente.
 	cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
-  operar(iss, oss);	    // Funci�n externa, no es un metodo de ninguna clase o estructura usada en el c�digo
-
-// bignum res;
-// bignum num1;
-// bignum num2;
-// string s="654";
-// num1 = s;
-// s="2";
-// num2 = s;
-// res=mult2(num1,num2);
-// cout<<"resultado = "<<res<<endl;
+  operar(iss, oss);	    // Funci�n externa, no es un metodo de ninguna clase o estructura usada en el codigo
 
 
   return 0;
