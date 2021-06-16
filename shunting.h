@@ -3,13 +3,16 @@
 
 #include<iostream>
 #include<string>
+#include <stack>
+#include <queue>
 #include "bignum.h"
+#include "tp1.h"
+#include "karatsuba.h"
+#include "standard.h"
+
 using namespace std;
 
 string operate(stack<string>, string);
 stack<string> shunting_yard(string &s);
-bool contains(string s, string cont);
-size_t count_op(stack<string>);
-size_t count_num(stack<string>);
 
 #endif

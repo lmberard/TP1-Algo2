@@ -2,8 +2,8 @@
 using namespace std;
 
 bignum standard::multiply(const bignum& a, const bignum& b)const{
-  unsigned short n = a.len;
-  unsigned short m = b.len;
+  unsigned long n = a.len;
+  unsigned long m = b.len;
   unsigned short carry = 0;
   bignum aux(n+m);
   bignum aux2(n+m);

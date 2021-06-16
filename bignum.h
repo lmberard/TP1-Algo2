@@ -13,8 +13,10 @@ Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
 #ifndef BIGNUM_INCLUDED
 #define BIGNUM_INCLUDED
 
-#include<iostream>
-#include<string>
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include "tp1.h"
 #include "standard.h"
 #include "karatsuba.h"
 using namespace std;
@@ -29,7 +31,7 @@ class bignum
   private:
     friend class standard;
     bool signo;
-    unsigned short len;
+    unsigned long len;
     unsigned short *digits;
     static multiply_interface* mult;
     static int instances;
@@ -41,16 +43,14 @@ class bignum
     friend bignum operator/(const bignum&, int);
     friend bignum operator%(const bignum&, int);
 
-
   public:
 
     bignum();
-    bignum(const unsigned short);
+    bignum(const unsigned long);
     bignum(const bignum&);
     bignum(const string&);
     ~bignum();
     void set_mult_strategy(multiply_interface*);
-    void set_signo(bool);
     bool get_signo();
     unsigned char get_len();
     string to_string();
