@@ -309,8 +309,11 @@ bignum operator/(const bignum& a, const bignum& b){
   bignum diez;
   diez = "10";
   if(is_zero(b)){
-    exit(1);
+    cout<<"Operacion invalida"<<endl;
+    return 0;
+    //exit(1);
   }
+
   if(a.len < b.len){
     result = result2;
     return result;
