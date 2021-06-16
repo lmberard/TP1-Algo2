@@ -11,19 +11,8 @@ Rubin, Ivan Eric		100577  irubin@fi.uba.ar
 Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
 */
 
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <cstdlib>
-#include <ctype.h>
-#include <string>
-#include <bits/stdc++.h>
-#include "cmdline.h"
-#include "bignum.h"
-#include "shunting.h"
+#include "tp1.h"
 using namespace std;
-
 
 static void opt_input(string const &);
 static void opt_output(string const &);
@@ -75,95 +64,130 @@ static fstream ofs;		// Output File Stream (derivada de la clase ofstream que de
 
 /*****************************************************/
 
-static void
-opt_metodo(string const &arg)
-{
+static void opt_metodo(string const &arg){
 	istringstream iss(arg);
-
-	if (!(iss >> metodo)
-	    || !iss.eof()) {
-		cerr << "non-integer precision: "
-		     << arg
-		     << "."
-		     << endl;
+	if(!(iss >> metodo)||!iss.eof()){
+		cerr<<"Invalid method: "<<arg<<"."<<endl;
 		exit(1);
 	}
-
-	if (iss.bad()) {
-		cerr << "cannot read integer precision."
-		     << endl;
+	if(iss.bad()){
+		cerr<<"Cannot read integer precision."<<endl;
 		exit(1);
 	}
-
-	if(metodo != "karatsuba" && metodo!= "standard"){
-		cerr<<"Metodo invalido"<<endl;
+	if(metodo!=METHOD_KARATSUBA&&metodo!=METHOD_STANDARD){
+		cerr<<"Invalid Method"<<endl;
 		exit(1);
 	}
 }
 
-static void
-opt_input(string const &arg)
-{
+static void opt_input(string const &arg){
 	// Si el nombre del archivos es "-", usaremos la entrada
 	// estandar. De lo contrario, abrimos un archivo en modo
 	// de lectura.
-	//
-	if (arg == "-") {
+	if (arg=="-"){
 		iss = &cin;		// Establezco la entrada estandar cin como flujo de entrada
-	}
-	else {
-		ifs.open(arg.c_str(), ios::in); // c_str(): Returns a pointer to an array that contains a null-terminated
-										// sequence of characters (i.e., a C-string) representing
-										// the current value of the string object.
+	}else{
+		// c_str(): Returns a pointer to an array that contains a null-terminated
+		// sequence of characters (i.e., a C-string) representing
+		// the current value of the string object.
+		ifs.open(arg.c_str(), ios::in);
 		iss = &ifs;
 	}
-
 	// Verificamos que el stream este OK.
-	//
-	if (!iss->good()) {
-		cerr << "cannot open "
-		     << arg
-		     << "."
-		     << endl;
+	if (!iss->good()){
+		cerr<<"cannot open "<<arg<<"."<< endl;
 		exit(1);
 	}
 }
 
-static void
-opt_output(string const &arg)
-{
+static void opt_output(string const &arg){
 	// Si el nombre del archivos es "-", usaremos la salida
-	// est�ndar. De lo contrario, abrimos un archivo en modo
+	// estandar. De lo contrario, abrimos un archivo en modo
 	// de escritura.
-	//
-	if (arg == "-") {
+	if(arg=="-"){
 		oss = &cout;	// Establezco la salida estandar cout como flujo de salida
-	} else {
+	}else{
 		ofs.open(arg.c_str(), ios::out);
 		oss = &ofs;
 	}
-
 	// Verificamos que el stream este OK.
-	//
-	if (!oss->good()) {
-		cerr << "cannot open "
-		     << arg
-		     << "."
-		     << endl;
-		exit(1);		// EXIT: Terminaci�n del programa en su totalidad
+	if(!oss->good()){
+		cerr<<"cannot open "<<arg<<"."<<endl;
+		exit(1);		// EXIT: Terminacion del programa en su totalidad
 	}
 }
 
-static void
-opt_help(string const &arg)
-{
+static void opt_help(string const &arg){
 	cout << "cmdline -p precision [-i file] [-o file]"
 	     << endl;
 	exit(0);
 }
 
-void operar(istream *is, ostream *os)
-{
+bool contains(string s, string cont){
+  if(s.find_first_of(cont) != string::npos){
+    return true;
+  }else
+    return false;
+}
+
+void validate_input_string(string s){
+	if(!contains(s,VALID_INPUT)){
+		cerr<<"Invalid Input"<<endl;
+		exit(1);
+	}
+}
+
+size_t count_op(stack<string> s){
+  size_t count=0;
+  stack<string> aux;
+
+  while(!s.empty()){
+    if(contains(s.top(),"+-*/")){
+      aux.push(s.top());
+      s.pop();
+      count++;
+    }else{
+      aux.push(s.top());
+      s.pop();
+    }
+  }
+
+  while(!aux.empty()){
+    s.push(aux.top());
+    aux.pop();
+  }
+
+  return count;
+}
+
+size_t count_num(stack<string> s){
+  size_t count=0;
+  stack<string> aux;
+
+  while(!s.empty()){
+    if(contains(s.top(),NUMBERS)){
+      aux.push(s.top());
+      s.pop();
+      count++;
+    }else{
+      aux.push(s.top());
+      s.pop();
+    }
+  }
+
+  while(!aux.empty()){
+    s.push(aux.top());
+    aux.pop();
+  }
+
+  return count;
+}
+
+void validate_operation(stack<string>& s){
+
+}
+
+void interpret(istream *is, ostream *os){
   string str;
 
   string a;
@@ -171,18 +195,19 @@ void operar(istream *is, ostream *os)
 
   while(getline(*is,str))
   {
-
 		string s;
-		bignum res;
-
 		stack<string> rpn;
+
     for(char c:str) if(!isspace(c)) s += c;
+
+		validate_input_string(s);
 		rpn = shunting_yard(s);
+		validate_operation(rpn);
 		str = operate(rpn, metodo);
+
+		bignum res;
 		res=str;
-
     *oss<<res<<endl;
-
   }
 
   if(!is->eof()){
@@ -199,23 +224,11 @@ void operar(istream *is, ostream *os)
   }
 }
 
-int main(int argc, char * const argv[])
-{
+int main(int argc, char * const argv[]){
 
-	cmdline cmdl(options);	// Objeto con parametro tipo option_t (struct) declarado globalmente. Ver l�nea 51 main.cc
+	cmdline cmdl(options); 	// Objeto con parametro tipo option_t (struct) declarado globalmente.
 	cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
-  operar(iss, oss);	    // Funci�n externa, no es un metodo de ninguna clase o estructura usada en el c�digo
-
-// bignum res;
-// bignum num1;
-// bignum num2;
-// string s="654";
-// num1 = s;
-// s="2";
-// num2 = s;
-// res=mult2(num1,num2);
-// cout<<"resultado = "<<res<<endl;
-
+  interpret(iss, oss); 		// Funcion externa, no es un metodo de ninguna clase o estructura usada en el codigo
 
   return 0;
 }

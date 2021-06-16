@@ -1,71 +1,10 @@
-#include <iostream>
-#include <string>
-#include <stack>
-#include <queue>
-#include "bignum.h"
 #include "shunting.h"
-#include "karatsuba.h"
-#include "standard.h"
 using namespace std;
-
-
-bool contains(string s, string cont){
-  if(s.find_first_of(cont) != string::npos){
-    return true;
-  }else
-    return false;
-}
-
-size_t count_op(stack<string> s){
-  size_t count=0;
-  stack<string> aux;
-
-  while(!s.empty()){
-    if(contains(s.top(),"+-*/")){
-      aux.push(s.top());
-      s.pop();
-      count++;
-    }else{
-      aux.push(s.top());
-      s.pop();
-    }
-  }
-
-  while(!aux.empty()){
-    s.push(aux.top());
-    aux.pop();
-  }
-
-  return count;
-}
-
-size_t count_num(stack<string> s){
-  size_t count=0;
-  stack<string> aux;
-
-  while(!s.empty()){
-    if(contains(s.top(),"0123456789")){
-      aux.push(s.top());
-      s.pop();
-      count++;
-    }else{
-      aux.push(s.top());
-      s.pop();
-    }
-  }
-
-  while(!aux.empty()){
-    s.push(aux.top());
-    aux.pop();
-  }
-
-  return count;
-}
 
 stack<string> shunting_yard(string &s){
   queue<string> c;
   stack<string> p;
-  string strchar="", num="";
+  string strchar, num;
 
   for(size_t i = 0; i < s.length(); i++){
       if('(' == s[i]){
@@ -80,7 +19,7 @@ stack<string> shunting_yard(string &s){
 
       if(s[i]=='-'&& i>0){
         strchar.push_back(s[i-1]);
-        if(!contains(strchar,"0123456789)")){ //Si atras no tiene numeros
+        if(!contains(strchar, NUMBERS+')')){ //Si atras no tiene numeros
           if(num[0]=='-'){
             num[0]='+';
             strchar="";
@@ -93,7 +32,7 @@ stack<string> shunting_yard(string &s){
           strchar="";
           strchar.push_back(s[i]);
           if(!p.empty() && strchar=="-"){
-            if(contains(p.top(),"+-*/")&&!contains(p.top(),"0123456789")){
+            if(contains(p.top(),"+-*/")&&!contains(p.top(),NUMBERS)){
               while(!p.empty()){
                 if(p.top()=="(")
                   break;
@@ -113,7 +52,7 @@ stack<string> shunting_yard(string &s){
 
       strchar.push_back(s[i]);
 
-      if(contains(strchar,"0123456789")){
+      if(contains(strchar,NUMBERS)){
 
         num+=strchar;
         strchar="";
@@ -137,10 +76,10 @@ stack<string> shunting_yard(string &s){
       }
 
 
-      if(contains(strchar,"+*/")){
+      if(contains(strchar,OPERATORS)){
 
         if(!p.empty() && strchar=="+"){
-          if(contains(p.top(),"+-*/")&&!contains(p.top(),"0123456789")){
+          if(contains(p.top(),"+-*/")&&!contains(p.top(),NUMBERS)){
             while(!p.empty()){
               if(p.top()=="(")
                 break;
@@ -195,15 +134,15 @@ string operate(stack<string> operacion, string metodo){
   bignum b;
   stack<string> aux;
 
-  if(metodo=="karatsuba"){
+  if(metodo==METHOD_KARATSUBA){
     a.set_mult_strategy(new karatsuba());
-  }else{
+  }else{//Por default se usa el metodo standard
     a.set_mult_strategy(new standard());
   }
 
   if(count_num(operacion)==1){
     while(!operacion.empty()){
-      if(contains(operacion.top(),"0123456789")){
+      if(contains(operacion.top(),NUMBERS)){
         return operacion.top();
       }
       operacion.pop();
@@ -215,15 +154,15 @@ string operate(stack<string> operacion, string metodo){
     a = "+0";
     b = "+0";
 
-    if(contains(operacion.top(),"0123456789")){
+    if(contains(operacion.top(),NUMBERS)){
       aux.push(operacion.top());
       operacion.pop();
 
-      if(contains(operacion.top(),"0123456789")){
+      if(contains(operacion.top(),NUMBERS)){
         aux.push(operacion.top());
         operacion.pop();
 
-        if(contains(operacion.top(),"+-*/")&&!contains(operacion.top(),"0123456789")){
+        if(!contains(operacion.top(),NUMBERS)){
           b=aux.top();
           aux.pop();
           a=aux.top();

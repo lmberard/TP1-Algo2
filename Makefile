@@ -16,6 +16,9 @@ cmdline.o: cmdline.cpp cmdline.h
 bignum.o: bignum.cpp bignum.h multiply_interface.h
 	$(CC) $(FLAGS) bignum.o
 
+tp1.o: tp1.cpp tp1.h
+	$(CC) $(FLAGS) tp1.o
+
 karatsuba.o: karatsuba.cpp karatsuba.h
 	$(CC) $(FLAGS) shunting.o
 

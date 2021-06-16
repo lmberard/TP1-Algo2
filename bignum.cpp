@@ -1,8 +1,5 @@
 #include "bignum.h"
-#include <string>
-#include <algorithm>
 using namespace std;
-
 
 multiply_interface* bignum::mult=new standard();
 int bignum::instances = 0;
@@ -16,7 +13,7 @@ bignum::bignum()
   instances++;
 }
 
-bignum::bignum(const unsigned short a)
+bignum::bignum(const unsigned long a)
   : signo(true),
     len(a)
 {
@@ -28,7 +25,7 @@ bignum::bignum(const string& s){
   string str;
   instances++;
   for(char c:s) if(!isspace(c)) str += c ;
-  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+')){
+  if(!(str.find_first_not_of(NUMBERS) == string::npos) && (str[0]!='-' && str[0]!='+')){
     cerr<<"Asignacion de numero invalida"<<endl;
     exit(1);
   }
@@ -56,7 +53,7 @@ bignum::bignum(const string& s){
   len=str.length()-hay_signo-z;
   digits=aux;
 
-  for(int i=0; i< len; i++)
+  for(unsigned long i=0; i< len; i++)
       digits[len-1-i]=str[len+z+hay_signo-i-1]-ASCII_FIX;
 }
 
@@ -82,7 +79,7 @@ bignum::bignum(const bignum& right){
     signo=right.signo;
     digits=new unsigned short[right.len];
     len=right.len;
-    for(int i=0; i<len; i++)
+    for(unsigned long i=0; i<len; i++)
       {digits[i]=right.digits[i];}
   }
 }
@@ -115,9 +112,6 @@ bool is_zero(const bignum& a){
 
 
 /***************************FUNCIONES PUBLICAS**************************************************************/
-void bignum::set_signo(bool s){
-  signo=s;
-}
 
 bool bignum::get_signo(){
   return signo;
@@ -132,7 +126,7 @@ string bignum::to_string(){
   if(!signo)
     str.push_back('-');
   char c;
-  for(size_t i=0; i<len; i++){
+  for(unsigned long i=0; i<len; i++){
     c=digits[i]+ASCII_FIX;
     str.push_back(c);
   }
@@ -151,13 +145,13 @@ const bignum& bignum::operator=(const bignum& right){
       delete[]digits;
       len=right.len;
       digits=aux;
-      for(int i=0; i<len; i++)
+      for(unsigned long i=0; i<len; i++)
         {digits[i]=right.digits[i];}
       return *this;
     }
     else
     {
-      for(int i=0; i<len; i++)digits[i]=right.digits[i];
+      for(unsigned long i=0; i<len; i++)digits[i]=right.digits[i];
       return *this;
     }
   }
@@ -167,7 +161,7 @@ const bignum& bignum::operator=(const bignum& right){
 const bignum& bignum::operator=(const string& right){
   string str;
   for(char c:right) if(!isspace(c)) str += c ;
-  if(!(str.find_first_not_of("0123456789") == string::npos) && (str[0]!='-' && str[0]!='+')){
+  if(!(str.find_first_not_of(NUMBERS) == string::npos) && (str[0]!='-' && str[0]!='+')){
     cerr<<"Asignacion de numero invalida"<<endl;
     exit(1);
   }
@@ -175,14 +169,11 @@ const bignum& bignum::operator=(const string& right){
   if(str[0]=='-'){signo=false;hay_signo=true;}
   if(str[0]=='+'){signo=true;hay_signo=true;}
 
-  // PARTE NUEVAAAAAAAAA
   unsigned short num = 0;
   for(size_t i =0; i < str.length()-hay_signo;i++){
     num += str[i+hay_signo]-ASCII_FIX;
   }
-  /************************************/
   unsigned short *aux;
-  //PARTE NUEVAAAAAAAAAA
   if(!num){
     aux = new unsigned short[1];
     delete[]digits;
@@ -199,7 +190,7 @@ const bignum& bignum::operator=(const string& right){
   len=str.length()-hay_signo-z;
   digits=aux;
 
-  for(int i=0; i< len; i++)
+  for(unsigned long i=0; i< len; i++)
       digits[len-1-i]=str[len+z+hay_signo-i-1]-ASCII_FIX;
   return *this;
 }
@@ -320,11 +311,11 @@ bignum operator/(const bignum& a, const bignum& b){
   }
 
   bignum aux(b.len);
-  for(int i = 0; i < aux.len; i++){
+  for(unsigned long i = 0; i < aux.len; i++){
     aux.digits[aux.len-1 -i] = a.digits[b.len-1 -i];
   }
 
-  for(int j = 0;j < (a.len-b.len); j++){
+  for(unsigned long j = 0;j < (a.len-b.len); j++){
     while((aux > b) || (aux == b)){
       aux = aux - b;
       cont++;
@@ -377,7 +368,7 @@ bool operator<(const bignum& a, const bignum& b){
       return false;
     //son de mismo largo
     else{
-      for(int i=0; i<a.len; i++)
+      for(unsigned long i=0; i<a.len; i++)
       {
         if(a.digits[i]<b.digits[i]){
           return true;
@@ -395,7 +386,7 @@ bool operator<(const bignum& a, const bignum& b){
       return false;
     //son de mismo largo
     else{
-      for(int i=0; i<a.len; i++)
+      for(unsigned long i=0; i<a.len; i++)
       {
         if(a.digits[i]>b.digits[i]){
           return true;
@@ -422,7 +413,7 @@ bool operator>(const bignum& a, const bignum& b){
     else if(b.len>a.len)
       return false;
     else{
-      for(int i=0; i<a.len; i++)
+      for(unsigned long i=0; i<a.len; i++)
       {
         if(a.digits[i]>b.digits[i]){
           return true;
@@ -440,7 +431,7 @@ bool operator>(const bignum& a, const bignum& b){
       return true;
     //son de mismo largo
     else{
-      for(int i=0; i<a.len; i++)
+      for(unsigned long i=0; i<a.len; i++)
       {
         if(a.digits[i]>b.digits[i]){
           return false;
@@ -457,7 +448,7 @@ bool operator>(const bignum& a, const bignum& b){
 ostream& operator<<(ostream& os, const bignum& num){
   if(num.signo==false && !(num.len==1 && num.digits[0]==0))
   { os << '-'; }
-  for(int i = 0; i< num.len;i++)
+  for(unsigned long i = 0; i< num.len;i++)
   {
     os << num.digits[i];
   }
@@ -467,7 +458,7 @@ ostream& operator<<(ostream& os, const bignum& num){
 istream& operator>>(istream& is, bignum& num){
   string s;
   is >> s;
-  while(!(s.find_first_not_of( "0123456789" ) == string::npos) && (s[0]!='-' && s[0]!='+'))
+  while(!(s.find_first_not_of(NUMBERS) == string::npos) && (s[0]!='-' && s[0]!='+'))
   {
     cerr << "El valor ingresado no es correcto. Intente nuevamente." << endl;
     is >> s;
@@ -483,7 +474,7 @@ bignum operator/(const bignum& right, int s){
   res.signo=right.signo;
   if(s>=1)
   {
-    for(int i=0; i<res.len; i++)
+    for(unsigned long i=0; i<res.len; i++)
         {res.digits[i]=right.digits[i];}
     return res;
   }
@@ -495,7 +486,7 @@ bignum operator%(const bignum& right, int s){
   res.signo=right.signo;
   if(s>=1)
   {
-    for(int i=right.len-s; i<right.len; i++)
+    for(unsigned long i=right.len-s; i<right.len; i++)
       {res.digits[i-(right.len-s)]=right.digits[i];}
     return res;
   }
@@ -505,7 +496,7 @@ bignum operator%(const bignum& right, int s){
 bignum llenar(const bignum& right, int diff){
   bignum aux(right.len + diff);
   aux.signo= right.signo;
-  for(int i=diff; i<aux.len; i++)
+  for(unsigned long i=diff; i<aux.len; i++)
       {aux.digits[i]= right.digits[i-diff];}
   return aux;
 }
@@ -513,7 +504,7 @@ bignum llenar(const bignum& right, int diff){
 bignum shift1(const bignum &right, int s){
   bignum aux(right.len+s);
   aux.signo=right.signo;
-  int i;
+  unsigned long i;
   for( i=0; i<right.len; i++)
     {aux.digits[i]=right.digits[i];}
   for( i=right.len; i<aux.len;i++)
