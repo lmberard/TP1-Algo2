@@ -306,12 +306,11 @@ bignum operator/(const bignum& a, const bignum& b){
   unsigned short cont = 0;
   bignum result(a.len);
   bignum result2;
-  bignum diez;
-  diez = "10";
+  bignum ten;
+  ten = TEN_STR;
   if(is_zero(b)){
-    cout<<"Operacion invalida"<<endl;
+    cout<<"Invalid Input (Divides by zero)"<<endl;
     return 0;
-    //exit(1);
   }
 
   if(a.len < b.len){
@@ -332,7 +331,7 @@ bignum operator/(const bignum& a, const bignum& b){
     result.digits[j+b.len-1] = cont;
     cont = 0;
 
-    aux = aux * diez;
+    aux = aux * ten;
 
     aux.digits[aux.len-1] = a.digits[b.len+j];
   }

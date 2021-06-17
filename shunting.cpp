@@ -8,19 +8,46 @@ stack<string>* shunting_yard(string &s){
 
   for(size_t i = 0; i < s.length(); i++){
       if('(' == s[i]){
+        if(i<s.length()-1){
+          if(s[i+1]=='+'||s[i+1]=='*'||s[i+1]=='/'||s[i+1]==')'){
+            cerr<<ERR_INVALID_INPUT<<endl;
+            delete c;
+            delete p;
+            exit(1);
+          }else if(i==s.length()-1){
+            cerr<<ERR_INVALID_INPUT<<endl;
+            delete c;
+            delete p;
+            exit(1);
+          }
+        }
         p->push("(");
         continue;
       }
 
       if(s[i]=='-'&& i==0){
-          num+="-";
-          continue;
+        if(s.length()>1){
+          strchar.push_back(s[i+1]);
+          if(!contains(strchar, NUMBERS)&&strchar!="-"){
+            cerr<<ERR_INVALID_INPUT<<endl;
+            delete c;
+            delete p;
+            exit(1);
+          }
+          if(strchar=="-"){
+            continue;
+          }
+          strchar="";
+        }
+
+        num+="-";
+        continue;
       }
 
+      //Chequeo si el menos es de signo o es operador
       if(s[i]=='-'&& i>0){
         strchar.push_back(s[i-1]);
-        if(!contains(strchar, "(0123456789")){ //Si atras no tiene numeros
-          cout<<"Invalid expression. Missing parentheses."<<endl;
+        if(!contains(strchar, BEHIND_MINUS)||s[i-1]=='-'){ //Si atras no tiene numeros
           if(num[0]=='-'){
             num[0]='+';
             strchar="";
@@ -33,7 +60,7 @@ stack<string>* shunting_yard(string &s){
           strchar="";
           strchar.push_back(s[i]);
           if(!p->empty() && strchar=="-"){
-            if(contains(p->top(),"+-*/")&&!contains(p->top(),NUMBERS)){
+            if(contains(p->top(),OPERATORS)&&!contains(p->top(),NUMBERS)){
               while(!p->empty()){
                 if(p->top()=="(")
                   break;
@@ -79,7 +106,7 @@ stack<string>* shunting_yard(string &s){
       if(contains(strchar,OPERATORS)){
 
         if(!p->empty() && strchar=="+"){
-          if(contains(p->top(),"+-*/")&&!contains(p->top(),NUMBERS)){
+          if(contains(p->top(),OPERATORS)&&!contains(p->top(),NUMBERS)){
             while(!p->empty()){
               if(p->top()=="(")
                 break;
@@ -97,11 +124,19 @@ stack<string>* shunting_yard(string &s){
       }
 
       if(s[i] == ')'){
+        if(i>0){
+          if(s[i-1]=='+'||s[i-1]=='-'||s[i-1]=='*'||s[i-1]=='/'){
+            cerr<<ERR_INVALID_INPUT<<endl;
+            delete c;
+            delete p;
+            exit(1);
+          }
+        }
         while(p->top()!="("){
           c->push(p->top());
           p->pop();
           if(p->empty()){
-            cerr<<"Invalid input"<<endl;
+            cerr<<ERR_INVALID_INPUT<<endl;
             delete c;
             delete p;
             exit(1);
@@ -191,14 +226,11 @@ string operate(stack<string>& operacion, string metodo){
             operacion.pop();
             operacion.push(res.to_string());
           }
-          cout<<res<<endl;
         }else{
           operacion.push(aux.top());
           aux.pop();
           continue;
         }
-      }else{
-        //error no hay 2 numeros seguidos
       }
     }
 

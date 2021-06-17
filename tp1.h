@@ -18,6 +18,7 @@ using namespace std;
 
 #define VALID_INPUT "+-*/0123456789()"
 #define NUMBERS "0123456789"
+#define BEHIND_MINUS ")0123456789"
 #define OPERATORS "*+-/"
 #define METHOD_KARATSUBA "karatsuba"
 #define METHOD_STANDARD "standard"

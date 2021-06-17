@@ -22,6 +22,7 @@ Sandoval, Diego Ariel		101639  dsandoval@fi.uba.ar
 using namespace std;
 
 #define ASCII_FIX 48
+#define TEN_STR "10"
 
 class multiply_interface;
 

@@ -191,12 +191,14 @@ size_t count_num(stack<string> s){
 }
 
 void validate_operation(stack<string>* s){
-	delete s;
-	exit(1);
+
+
   stack<string> aux;
+	string aux2;
 	bool tiene_par = false;
   while(!s->empty()){
     if(contains(s->top(),"(")){
+			aux2=s->top()
       aux.push(s->top());
       s->pop();
       tiene_par=true;
