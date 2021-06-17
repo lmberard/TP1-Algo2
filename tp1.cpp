@@ -130,8 +130,15 @@ bool contains(string s, string cont){
     return false;
 }
 
+bool contains_different_of(string s, string cont){
+	if(s.find_first_not_of(cont) != string::npos){
+    return true;
+  }else
+    return false;
+}
+
 void validate_input_string(string s){
-	if(!contains(s,VALID_INPUT)){
+	if(contains_different_of(s,VALID_INPUT)){
 		cerr<<"Invalid Input"<<endl;
 		exit(1);
 	}
@@ -184,23 +191,45 @@ size_t count_num(stack<string> s){
 }
 
 void validate_operation(stack<string>& s){
+	delete &s;
+	exit(1);
 
+  stack<string> aux;
+	bool tiene_par = false;
+  while(!s.empty()){
+    if(contains(s.top(),"()")){
+      aux.push(s.top());
+      s.pop();
+      tiene_par=true;
+    }else{
+      aux.push(s.top());
+      s.pop();
+    }
+  }
+	if(tiene_par){
+		cerr<<"Invalid input"<<endl;
+		//delete &s;
+		exit(1);
+	}
+
+  while(!aux.empty()){
+    s.push(aux.top());
+    aux.pop();
+  }
 }
 
 void interpret(istream *is, ostream *os){
   string str;
-
   string a;
   string b;
 
   while(getline(*is,str))
   {
 		string s;
-		stack<string> rpn;
-
     for(char c:str) if(!isspace(c)) s += c;
-
 		validate_input_string(s);
+
+	  stack<string> rpn;
 		rpn = shunting_yard(s);
 		validate_operation(rpn);
 		str = operate(rpn, metodo);
@@ -225,10 +254,16 @@ void interpret(istream *is, ostream *os){
 }
 
 int main(int argc, char * const argv[]){
+	//try{
+		cmdline cmdl(options); 	// Objeto con parametro tipo option_t (struct) declarado globalmente.
+		cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
+		interpret(iss, oss); 		// Funcion externa, no es un metodo de ninguna clase o estructura usada en el codigo
+	// }catch(...){
+	// 	cout<<"error"<<endl;
+	// 	return 1;
+	// }
 
-	cmdline cmdl(options); 	// Objeto con parametro tipo option_t (struct) declarado globalmente.
-	cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
-  interpret(iss, oss); 		// Funcion externa, no es un metodo de ninguna clase o estructura usada en el codigo
+
 
   return 0;
 }

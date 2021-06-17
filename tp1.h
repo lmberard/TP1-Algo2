@@ -9,6 +9,8 @@
 #include <ctype.h>
 #include <string>
 #include <bits/stdc++.h>
+#include <exception>
+#include <stack>
 #include "cmdline.h"
 #include "bignum.h"
 #include "shunting.h"
@@ -21,6 +23,7 @@ using namespace std;
 #define METHOD_STANDARD "standard"
 
 bool contains(string, string);
+bool contains_different_of(string, string);
 void validate_input_string(string);
 void validate_operation(stack<string>&);
 size_t count_op(stack<string>);

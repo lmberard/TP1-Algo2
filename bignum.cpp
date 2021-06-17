@@ -1,7 +1,7 @@
 #include "bignum.h"
 using namespace std;
 
-multiply_interface* bignum::mult=new standard();
+multiply_interface* bignum::mult=NULL;
 int bignum::instances = 0;
 
 /**************************CONSTRUCTORES Y DESTRUCTORES************************************************/
@@ -11,6 +11,8 @@ bignum::bignum()
 {
   digits = new unsigned short[len]();
   instances++;
+  if(mult==NULL)
+    mult=new standard();
 }
 
 bignum::bignum(const unsigned long a)
@@ -19,11 +21,16 @@ bignum::bignum(const unsigned long a)
 {
   digits = new unsigned short[len]();
   instances++;
+  if(mult==NULL)
+    mult=new standard();
 }
 
 bignum::bignum(const string& s){
   string str;
   instances++;
+  if(mult==NULL){
+    mult=new standard();
+  }
   for(char c:s) if(!isspace(c)) str += c ;
   if(!(str.find_first_not_of(NUMBERS) == string::npos) && (str[0]!='-' && str[0]!='+')){
     cerr<<"Asignacion de numero invalida"<<endl;
@@ -76,6 +83,8 @@ void bignum::set_mult_strategy(multiply_interface* m){
 bignum::bignum(const bignum& right){
   if(&right !=this)
   {
+    if(mult==NULL)
+      mult=new standard();
     signo=right.signo;
     digits=new unsigned short[right.len];
     len=right.len;

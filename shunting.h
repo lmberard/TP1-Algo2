@@ -12,7 +12,7 @@
 
 using namespace std;
 
-string operate(stack<string>, string);
+string operate(stack<string>&, string);
 stack<string> shunting_yard(string &s);
 
 #endif

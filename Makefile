@@ -40,4 +40,4 @@ gdb: tp1
 	gdb ./tp1
 
 valgrind: tp1
-	valgrind --leak-check=full --show-leak-kinds=all ./tp1
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s ./tp1

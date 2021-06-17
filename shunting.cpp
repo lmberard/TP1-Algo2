@@ -75,7 +75,6 @@ stack<string> shunting_yard(string &s){
         }
       }
 
-
       if(contains(strchar,OPERATORS)){
 
         if(!p.empty() && strchar=="+"){
@@ -95,7 +94,6 @@ stack<string> shunting_yard(string &s){
         strchar="";
         continue;
       }
-
 
       if(s[i] == ')'){
         while(p.top()!="("){
@@ -127,7 +125,7 @@ stack<string> shunting_yard(string &s){
   return operacion;
 }
 
-string operate(stack<string> operacion, string metodo){
+string operate(stack<string>& operacion, string metodo){
 
   bignum res;
   bignum a;
