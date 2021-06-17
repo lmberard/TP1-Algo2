@@ -2,13 +2,13 @@
 using namespace std;
 
 stack<string>* shunting_yard(string &s){
-  queue<string> c;
-  stack<string> p;
+  queue<string>* c = new queue<string>;
+  stack<string>* p = new stack<string>;
   string strchar, num;
 
   for(size_t i = 0; i < s.length(); i++){
       if('(' == s[i]){
-        p.push("(");
+        p->push("(");
         continue;
       }
 
@@ -32,20 +32,20 @@ stack<string>* shunting_yard(string &s){
         }else {//si tiene numeros atras o ')'
           strchar="";
           strchar.push_back(s[i]);
-          if(!p.empty() && strchar=="-"){
-            if(contains(p.top(),"+-*/")&&!contains(p.top(),NUMBERS)){
-              while(!p.empty()){
-                if(p.top()=="(")
+          if(!p->empty() && strchar=="-"){
+            if(contains(p->top(),"+-*/")&&!contains(p->top(),NUMBERS)){
+              while(!p->empty()){
+                if(p->top()=="(")
                   break;
-                c.push(p.top());
-                p.pop();
+                c->push(p->top());
+                p->pop();
               }
-              p.push(strchar);
+              p->push(strchar);
               strchar="";
               continue;
             }
           }
-          p.push("-");
+          p->push("-");
           strchar="";
           continue;
         }
@@ -63,13 +63,13 @@ stack<string>* shunting_yard(string &s){
             strchar="";
             continue;
           }else{
-            c.push(num);
+            c->push(num);
             strchar="";
             num="";
             continue;
           }
         }else{
-          c.push(num);
+          c->push(num);
           strchar="";
           num="";
           continue;
@@ -78,46 +78,51 @@ stack<string>* shunting_yard(string &s){
 
       if(contains(strchar,OPERATORS)){
 
-        if(!p.empty() && strchar=="+"){
-          if(contains(p.top(),"+-*/")&&!contains(p.top(),NUMBERS)){
-            while(!p.empty()){
-              if(p.top()=="(")
+        if(!p->empty() && strchar=="+"){
+          if(contains(p->top(),"+-*/")&&!contains(p->top(),NUMBERS)){
+            while(!p->empty()){
+              if(p->top()=="(")
                 break;
-              c.push(p.top());
-              p.pop();
+              c->push(p->top());
+              p->pop();
             }
-            p.push(strchar);
+            p->push(strchar);
             strchar="";
             continue;
           }
         }
-        p.push(strchar);
+        p->push(strchar);
         strchar="";
         continue;
       }
 
       if(s[i] == ')'){
-        while(p.top()!="("){
-          c.push(p.top());
-          p.pop();
+        while(p->top()!="("){
+          c->push(p->top());
+          p->pop();
+          if(p->empty()){
+            cerr<<"Invalid input"<<endl;
+            delete c;
+            delete p;
+            exit(1);
+          }
         }
-        p.pop();
+        p->pop();
         strchar="";
       }
   }
 
-  while(!p.empty()){
-    c.push(p.top());
-    p.pop();
+  while(!p->empty()){
+    c->push(p->top());
+    p->pop();
   }
 
   stack<string> *operacion= new stack<string>();
   stack<string> aux;
 
-  while(!c.empty()){
-    aux.push(c.front());
-    //cout<<aux.top()<<endl;
-    c.pop();
+  while(!c->empty()){
+    aux.push(c->front());
+    c->pop();
   }
 
   while(!aux.empty()){

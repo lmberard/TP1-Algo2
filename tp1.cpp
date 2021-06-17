@@ -191,7 +191,8 @@ size_t count_num(stack<string> s){
 }
 
 void validate_operation(stack<string>* s){
-
+	delete s;
+	exit(1);
   stack<string> aux;
 	bool tiene_par = false;
   while(!s->empty()){
@@ -200,7 +201,7 @@ void validate_operation(stack<string>* s){
       s->pop();
       tiene_par=true;
     }else{
-      aux.push(s.top());
+      aux.push(s->top());
       s->pop();
     }
   }

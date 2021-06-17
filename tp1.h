@@ -22,6 +22,8 @@ using namespace std;
 #define METHOD_KARATSUBA "karatsuba"
 #define METHOD_STANDARD "standard"
 
+#define ERR_INVALID_INPUT "Invalid Input"
+
 bool contains(string, string);
 bool contains_different_of(string, string);
 void validate_input_string(string);
