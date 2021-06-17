@@ -3,6 +3,7 @@ using namespace std;
 
 
 bignum karatsuba::multiply(const bignum& u, const bignum& v)const{
+  //cout<<"karatsuba"<<endl;
   //modifico los bignum, me saca los ceros a izquierda y corrige el len
   bignum u1 = truelen(u);
   bignum v1 = truelen(v);

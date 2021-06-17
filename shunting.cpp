@@ -118,6 +118,7 @@ stack<string>* shunting_yard(string &s){
             continue;
           }
         }
+
         p->push(strchar);
         strchar="";
         continue;

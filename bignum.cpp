@@ -41,9 +41,16 @@ bignum::bignum(const string& s){
   if(str[0]=='+'){signo=true;hay_signo=true;}
 
   unsigned short num = 0;
-  for(size_t i =0; i < str.length()-hay_signo;i++){
-    num += str[i+hay_signo]-ASCII_FIX;
+  if(hay_signo){
+    for(size_t i =0; i < str.length()-1;i++){
+      num += str[i+1]-ASCII_FIX;
+    }
+  }else{
+    for(size_t i =0; i < str.length();i++){
+      num += str[i]-ASCII_FIX;
+    }
   }
+
   unsigned short *aux;
 
   if(!num){
@@ -54,14 +61,23 @@ bignum::bignum(const string& s){
     return;
   }
   size_t z = 0;
-  while(str[z++ +hay_signo] == '0'){};z--;
 
-  aux=new unsigned short[str.length()-hay_signo-z];
-  len=str.length()-hay_signo-z;
-  digits=aux;
+  if(hay_signo){
+    while(str[z++ +1] == '0'){};z--;
+    aux=new unsigned short[str.length()-1-z];
+    len=str.length()-1-z;
+    digits=aux;
+    for(unsigned long i=0; i< len; i++)
+        digits[len-1-i]=str[len+z-i]-ASCII_FIX;
+  }else{
+    while(str[z++] == '0'){};z--;
+    aux=new unsigned short[str.length()-z];
+    len=str.length()-z;
+    digits=aux;
+    for(unsigned long i=0; i< len; i++)
+        digits[len-1-i]=str[len+z-i-1]-ASCII_FIX;
+  }
 
-  for(unsigned long i=0; i< len; i++)
-      digits[len-1-i]=str[len+z+hay_signo-i-1]-ASCII_FIX;
 }
 
 bignum::~bignum(){
@@ -324,7 +340,7 @@ bignum operator/(const bignum& a, const bignum& b){
   bignum ten;
   ten = TEN_STR;
   if(is_zero(b)){
-    cout<<"Invalid Input (Divides by zero)"<<endl;
+    cout<<ERR_DIVIDE_BY_ZERO<<endl;
     return 0;
   }
 
@@ -483,7 +499,7 @@ istream& operator>>(istream& is, bignum& num){
   is >> s;
   while(!(s.find_first_not_of(NUMBERS) == string::npos) && (s[0]!='-' && s[0]!='+'))
   {
-    cerr << "El valor ingresado no es correcto. Intente nuevamente." << endl;
+    cerr <<ERR_INVALID_INPUT<< endl;
     is >> s;
   }
   num = s;

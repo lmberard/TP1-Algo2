@@ -35,6 +35,7 @@ using namespace std;
 #define CANT_READ_METHOD "Cannot read method."
 
 #define ERR_INVALID_INPUT "Invalid Input."
+#define ERR_DIVIDE_BY_ZERO "Invalid Input (Divides by zero value)."
 #define ERR_NO_EOF "No se encontro EOF en la entrada."
 #define ERR_CANT_READ_INPUT "No se pudo leer la entrada."
 #define ERR_CANT_WRITE_OUTPUT "No se pudo escribir en la salida."

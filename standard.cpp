@@ -2,6 +2,7 @@
 using namespace std;
 
 bignum standard::multiply(const bignum& a, const bignum& b)const{
+  //cout<<"standard"<<endl;
   unsigned long n = a.len;
   unsigned long m = b.len;
   unsigned short carry = 0;
