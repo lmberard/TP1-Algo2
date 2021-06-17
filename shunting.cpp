@@ -19,7 +19,8 @@ stack<string> shunting_yard(string &s){
 
       if(s[i]=='-'&& i>0){
         strchar.push_back(s[i-1]);
-        if(!contains(strchar, NUMBERS+')')){ //Si atras no tiene numeros
+        if(!contains(strchar, "(0123456789")){ //Si atras no tiene numeros
+          cout<<"hola"<<endl;
           if(num[0]=='-'){
             num[0]='+';
             strchar="";
@@ -114,6 +115,7 @@ stack<string> shunting_yard(string &s){
 
   while(!c.empty()){
     aux.push(c.front());
+    cout<<aux.top()<<endl;
     c.pop();
   }
 

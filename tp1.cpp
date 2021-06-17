@@ -191,31 +191,35 @@ size_t count_num(stack<string> s){
 }
 
 void validate_operation(stack<string>& s){
-	delete &s;
-	exit(1);
 
-  stack<string> aux;
-	bool tiene_par = false;
-  while(!s.empty()){
-    if(contains(s.top(),"()")){
-      aux.push(s.top());
-      s.pop();
-      tiene_par=true;
-    }else{
-      aux.push(s.top());
-      s.pop();
-    }
-  }
-	if(tiene_par){
-		cerr<<"Invalid input"<<endl;
-		//delete &s;
-		exit(1);
-	}
+	// while(!s.empty()){
+	// 	s.pop();
+	// }
+	//delete &s;
+	//exit(1);
 
-  while(!aux.empty()){
-    s.push(aux.top());
-    aux.pop();
-  }
+  //stack<string> aux;
+	// bool tiene_par = false;
+  // while(!s.empty()){
+  //   if(contains(s.top(),"()")){
+  //     aux.push(s.top());
+  //     s.pop();
+  //     tiene_par=true;
+  //   }else{
+  //     aux.push(s.top());
+  //     s.pop();
+  //   }
+  // }
+	// if(tiene_par){
+	// 	cerr<<"Invalid input"<<endl;
+	// 	//delete &s;
+	// 	exit(1);
+	// }
+	//
+  // while(!aux.empty()){
+  //   s.push(aux.top());
+  //   aux.pop();
+  // }
 }
 
 void interpret(istream *is, ostream *os){
