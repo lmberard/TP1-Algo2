@@ -12,7 +12,7 @@ bignum::bignum()
   digits = new unsigned short[len]();
   instances++;
   if(mult==NULL)
-    mult=new standard();
+    mult=new karatsuba();
 }
 
 bignum::bignum(const unsigned long a)
@@ -22,14 +22,14 @@ bignum::bignum(const unsigned long a)
   digits = new unsigned short[len]();
   instances++;
   if(mult==NULL)
-    mult=new standard();
+    mult=new karatsuba();
 }
 
 bignum::bignum(const string& s){
   string str;
   instances++;
   if(mult==NULL){
-    mult=new standard();
+    mult=new karatsuba();
   }
   for(char c:s) if(!isspace(c)) str += c ;
   if(!(str.find_first_not_of(NUMBERS) == string::npos) && (str[0]!='-' && str[0]!='+')){
@@ -84,7 +84,7 @@ bignum::bignum(const bignum& right){
   if(&right !=this)
   {
     if(mult==NULL)
-      mult=new standard();
+      mult=new karatsuba();
     signo=right.signo;
     digits=new unsigned short[right.len];
     len=right.len;
