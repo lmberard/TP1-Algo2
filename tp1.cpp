@@ -190,36 +190,33 @@ size_t count_num(stack<string> s){
   return count;
 }
 
-void validate_operation(stack<string>& s){
+void validate_operation(stack<string>* s){
 
-	// while(!s.empty()){
-	// 	s.pop();
-	// }
-	//delete &s;
-	//exit(1);
+  stack<string> aux;
+	bool tiene_par = false;
+  while(!s->empty()){
+    if(contains(s->top(),"(")){
+      aux.push(s->top());
+      s->pop();
+      tiene_par=true;
+    }else{
+      aux.push(s.top());
+      s->pop();
+    }
+  }
+	if(tiene_par){
+		cerr<<"Invalid input"<<endl;
+		delete s;
+		exit(1);
+	}
 
-  //stack<string> aux;
-	// bool tiene_par = false;
-  // while(!s.empty()){
-  //   if(contains(s.top(),"()")){
-  //     aux.push(s.top());
-  //     s.pop();
-  //     tiene_par=true;
-  //   }else{
-  //     aux.push(s.top());
-  //     s.pop();
-  //   }
-  // }
-	// if(tiene_par){
-	// 	cerr<<"Invalid input"<<endl;
-	// 	//delete &s;
-	// 	exit(1);
-	// }
-	//
-  // while(!aux.empty()){
-  //   s.push(aux.top());
-  //   aux.pop();
-  // }
+  while(!aux.empty()){
+    s->push(aux.top());
+    aux.pop();
+  }
+
+	// delete s;
+	// exit(1);
 }
 
 void interpret(istream *is, ostream *os){
@@ -233,10 +230,10 @@ void interpret(istream *is, ostream *os){
     for(char c:str) if(!isspace(c)) s += c;
 		validate_input_string(s);
 
-	  stack<string> rpn;
-		rpn = shunting_yard(s);
+	  stack<string>* rpn= shunting_yard(s);
 		validate_operation(rpn);
-		str = operate(rpn, metodo);
+		str = operate(*rpn, metodo);
+		delete rpn;
 
 		bignum res;
 		res=str;

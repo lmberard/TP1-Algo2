@@ -25,7 +25,7 @@ using namespace std;
 bool contains(string, string);
 bool contains_different_of(string, string);
 void validate_input_string(string);
-void validate_operation(stack<string>&);
+void validate_operation(stack<string>*);
 size_t count_op(stack<string>);
 size_t count_num(stack<string>);
 void interpret(istream*, ostream*);

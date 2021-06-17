@@ -1,7 +1,7 @@
 #include "shunting.h"
 using namespace std;
 
-stack<string> shunting_yard(string &s){
+stack<string>* shunting_yard(string &s){
   queue<string> c;
   stack<string> p;
   string strchar, num;
@@ -105,12 +105,13 @@ stack<string> shunting_yard(string &s){
         strchar="";
       }
   }
+
   while(!p.empty()){
     c.push(p.top());
     p.pop();
   }
 
-  stack<string> operacion;
+  stack<string> *operacion= new stack<string>();
   stack<string> aux;
 
   while(!c.empty()){
@@ -120,7 +121,7 @@ stack<string> shunting_yard(string &s){
   }
 
   while(!aux.empty()){
-    operacion.push(aux.top());
+    operacion->push(aux.top());
     aux.pop();
   }
 
@@ -185,6 +186,7 @@ string operate(stack<string>& operacion, string metodo){
             operacion.pop();
             operacion.push(res.to_string());
           }
+          cout<<res<<endl;
         }else{
           operacion.push(aux.top());
           aux.pop();
