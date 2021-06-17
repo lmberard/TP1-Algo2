@@ -31,14 +31,19 @@ class bignum
     friend class multiply_interface;
   private:
     friend class standard;
+
+    //Atributos
     bool signo;
     unsigned long len;
     unsigned short *digits;
     static multiply_interface* mult;
     static int instances;
 
+    //Funciones privadas
     friend bool is_zero(const bignum&);
     friend bignum truelen(const bignum&);
+
+    //Funciones usadas en Karatsuba
     friend bignum llenar(const bignum&, int);
     friend bignum shift1(const bignum &,int);
     friend bignum operator/(const bignum&, int);

@@ -108,7 +108,7 @@ stack<string>* shunting_yard(string &s){
         if(!p->empty() && strchar=="+"){
           if(contains(p->top(),OPERATORS)&&!contains(p->top(),NUMBERS)){
             while(!p->empty()){
-              if(p->top()=="(")
+              if(p->top()==LEFT_PARENTHESES)
                 break;
               c->push(p->top());
               p->pop();
@@ -181,7 +181,7 @@ string operate(stack<string>& operacion, string metodo){
     a.set_mult_strategy(new karatsuba());
   }
 
-  if(count_num(operacion)==1){
+  if(count_num(&operacion)==1){
     while(!operacion.empty()){
       if(contains(operacion.top(),NUMBERS)){
         return operacion.top();

@@ -67,15 +67,15 @@ static fstream ofs;		// Output File Stream (derivada de la clase ofstream que de
 static void opt_metodo(string const &arg){
 	istringstream iss(arg);
 	if(!(iss >> metodo)||!iss.eof()){
-		cerr<<"Invalid method: "<<arg<<"."<<endl;
+		cerr<<INVALID_METHOD_MSG<<": "<<arg<<"."<<endl;
 		exit(1);
 	}
 	if(iss.bad()){
-		cerr<<"Cannot read integer precision."<<endl;
+		cerr<<CANT_READ_METHOD<<endl;
 		exit(1);
 	}
 	if(metodo!=METHOD_KARATSUBA&&metodo!=METHOD_STANDARD){
-		cerr<<"Invalid Method"<<endl;
+		cerr<<INVALID_METHOD_MSG<<endl;
 		exit(1);
 	}
 }
@@ -95,7 +95,7 @@ static void opt_input(string const &arg){
 	}
 	// Verificamos que el stream este OK.
 	if (!iss->good()){
-		cerr<<"cannot open "<<arg<<"."<< endl;
+		cerr<<CANT_OPEN_MSG<<arg<<"."<< endl;
 		exit(1);
 	}
 }
@@ -112,14 +112,13 @@ static void opt_output(string const &arg){
 	}
 	// Verificamos que el stream este OK.
 	if(!oss->good()){
-		cerr<<"cannot open "<<arg<<"."<<endl;
+		cerr<<CANT_OPEN_MSG<<arg<<"."<<endl;
 		exit(1);		// EXIT: Terminacion del programa en su totalidad
 	}
 }
 
 static void opt_help(string const &arg){
-	cout << "cmdline -p precision [-i file] [-o file]"
-	     << endl;
+	cout << HELP_MSG << endl;
 	exit(0);
 }
 
@@ -139,51 +138,51 @@ bool contains_different_of(string s, string cont){
 
 void validate_input_string(string s){
 	if(contains_different_of(s,VALID_INPUT)){
-		cerr<<"Invalid Input"<<endl;
+		cerr<<ERR_INVALID_INPUT<<endl;
 		exit(1);
 	}
 }
 
-size_t count_op(stack<string> s){
+size_t count_op(stack<string>* s){
   size_t count=0;
   stack<string> aux;
 
-  while(!s.empty()){
-    if(contains(s.top(),"+-*/")){
-      aux.push(s.top());
-      s.pop();
+  while(!s->empty()){
+    if(!contains(s->top(),NUMBERS)){
+      aux.push(s->top());
+      s->pop();
       count++;
     }else{
-      aux.push(s.top());
-      s.pop();
+      aux.push(s->top());
+      s->pop();
     }
   }
 
   while(!aux.empty()){
-    s.push(aux.top());
+    s->push(aux.top());
     aux.pop();
   }
 
   return count;
 }
 
-size_t count_num(stack<string> s){
+size_t count_num(stack<string>* s){
   size_t count=0;
   stack<string> aux;
 
-  while(!s.empty()){
-    if(contains(s.top(),NUMBERS)){
-      aux.push(s.top());
-      s.pop();
+  while(!s->empty()){
+    if(contains(s->top(),NUMBERS)){
+      aux.push(s->top());
+      s->pop();
       count++;
     }else{
-      aux.push(s.top());
-      s.pop();
+      aux.push(s->top());
+      s->pop();
     }
   }
 
   while(!aux.empty()){
-    s.push(aux.top());
+    s->push(aux.top());
     aux.pop();
   }
 
@@ -192,13 +191,16 @@ size_t count_num(stack<string> s){
 
 void validate_operation(stack<string>* s){
 
-
   stack<string> aux;
-	string aux2;
 	bool tiene_par = false;
+	if(count_op(s) >= count_num(s)){
+		cerr<<ERR_INVALID_INPUT<<endl;
+		delete s;
+		exit(1);
+	}
+
   while(!s->empty()){
-    if(contains(s->top(),"(")){
-			aux2=s->top()
+    if(contains(s->top(),LEFT_PARENTHESES)){
       aux.push(s->top());
       s->pop();
       tiene_par=true;
@@ -208,7 +210,7 @@ void validate_operation(stack<string>* s){
     }
   }
 	if(tiene_par){
-		cerr<<"Invalid input"<<endl;
+		cerr<<ERR_INVALID_INPUT<<endl;
 		delete s;
 		exit(1);
 	}
@@ -217,9 +219,6 @@ void validate_operation(stack<string>* s){
     s->push(aux.top());
     aux.pop();
   }
-
-	// delete s;
-	// exit(1);
 }
 
 void interpret(istream *is, ostream *os){
@@ -244,30 +243,24 @@ void interpret(istream *is, ostream *os){
   }
 
   if(!is->eof()){
-    cerr<<"No se encontro EOF en la entrada"<<endl;
+    cerr<<ERR_NO_EOF<<endl;
     exit(1);
   }
   if(is->bad()){
-    cerr<<"No se pudo leer la entrada"<<endl;
+    cerr<<ERR_CANT_READ_INPUT<<endl;
     exit(1);
   }
   if(os->bad()){
-    cerr<<"No se pudo escribir en la salida"<<endl;
+    cerr<<ERR_CANT_WRITE_OUTPUT<<endl;
     exit(1);
   }
 }
 
 int main(int argc, char * const argv[]){
-	//try{
-		cmdline cmdl(options); 	// Objeto con parametro tipo option_t (struct) declarado globalmente.
-		cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
-		interpret(iss, oss); 		// Funcion externa, no es un metodo de ninguna clase o estructura usada en el codigo
-	// }catch(...){
-	// 	cout<<"error"<<endl;
-	// 	return 1;
-	// }
 
-
+	cmdline cmdl(options); 	// Objeto con parametro tipo option_t (struct) declarado globalmente.
+	cmdl.parse(argc, argv); // Metodo de parseo de la clase cmdline
+	interpret(iss, oss); 		// Funcion externa, no es un metodo de ninguna clase o estructura usada en el codigo
 
   return 0;
 }

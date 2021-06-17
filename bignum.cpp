@@ -33,7 +33,7 @@ bignum::bignum(const string& s){
   }
   for(char c:s) if(!isspace(c)) str += c ;
   if(!(str.find_first_not_of(NUMBERS) == string::npos) && (str[0]!='-' && str[0]!='+')){
-    cerr<<"Asignacion de numero invalida"<<endl;
+    cerr<<ERR_INVALID_INPUT<<endl;
     exit(1);
   }
   bool hay_signo=false;
@@ -171,7 +171,7 @@ const bignum& bignum::operator=(const string& right){
   string str;
   for(char c:right) if(!isspace(c)) str += c ;
   if(!(str.find_first_not_of(NUMBERS) == string::npos) && (str[0]!='-' && str[0]!='+')){
-    cerr<<"Asignacion de numero invalida"<<endl;
+    cerr<<ERR_INVALID_INPUT<<endl;
     exit(1);
   }
   bool hay_signo=false;
@@ -179,8 +179,14 @@ const bignum& bignum::operator=(const string& right){
   if(str[0]=='+'){signo=true;hay_signo=true;}
 
   unsigned short num = 0;
-  for(size_t i =0; i < str.length()-hay_signo;i++){
-    num += str[i+hay_signo]-ASCII_FIX;
+  if(hay_signo){
+    for(size_t i =0; i < str.length()-1;i++){
+      num += str[i+1]-ASCII_FIX;
+    }
+  }else{
+    for(size_t i =0; i < str.length();i++){
+      num += str[i]-ASCII_FIX;
+    }
   }
   unsigned short *aux;
   if(!num){
@@ -192,15 +198,24 @@ const bignum& bignum::operator=(const string& right){
     return *this;
   }
   size_t z = 0;
-  while(str[z++ +hay_signo] == '0'){};z--;
-  /*******************************************************///Y A TOoDO SE LE AGREGA Z
-  aux=new unsigned short[str.length()-hay_signo-z];
-  delete[]digits;
-  len=str.length()-hay_signo-z;
-  digits=aux;
+  if(hay_signo){
+    while(str[z++ +1] == '0'){};z--;
+    aux=new unsigned short[str.length()-1-z];
+    delete[]digits;
+    len=str.length()-1-z;
+    digits=aux;
+    for(unsigned long i=0; i< len; i++)
+        digits[len-1-i]=str[len+z-i]-ASCII_FIX;
+  }else{
+    while(str[z++] == '0'){};z--;
+    aux=new unsigned short[str.length()-z];
+    delete[]digits;
+    len=str.length()-z;
+    digits=aux;
+    for(unsigned long i=0; i< len; i++)
+        digits[len-1-i]=str[len+z-i-1]-ASCII_FIX;
+  }
 
-  for(unsigned long i=0; i< len; i++)
-      digits[len-1-i]=str[len+z+hay_signo-i-1]-ASCII_FIX;
   return *this;
 }
 
