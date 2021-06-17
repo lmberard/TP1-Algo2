@@ -20,7 +20,7 @@ stack<string>* shunting_yard(string &s){
       if(s[i]=='-'&& i>0){
         strchar.push_back(s[i-1]);
         if(!contains(strchar, "(0123456789")){ //Si atras no tiene numeros
-          cout<<"hola"<<endl;
+          cout<<"Invalid expression. Missing parentheses."<<endl;
           if(num[0]=='-'){
             num[0]='+';
             strchar="";
@@ -116,7 +116,7 @@ stack<string>* shunting_yard(string &s){
 
   while(!c.empty()){
     aux.push(c.front());
-    cout<<aux.top()<<endl;
+    //cout<<aux.top()<<endl;
     c.pop();
   }
 
@@ -135,10 +135,10 @@ string operate(stack<string>& operacion, string metodo){
   bignum b;
   stack<string> aux;
 
-  if(metodo==METHOD_KARATSUBA){
-    a.set_mult_strategy(new karatsuba());
-  }else{//Por default se usa el metodo standard
+  if(metodo==METHOD_STANDARD){
     a.set_mult_strategy(new standard());
+  }else{//Por default se usa el metodo karatsuba
+    a.set_mult_strategy(new karatsuba());
   }
 
   if(count_num(operacion)==1){
