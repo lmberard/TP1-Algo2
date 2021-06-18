@@ -52,7 +52,7 @@ static option_t options[] = {
 	{1, "i", "input", "-", opt_input, OPT_DEFAULT},
 	{1, "o", "output", "-", opt_output, OPT_DEFAULT},
 	{0, "h", "help", NULL, opt_help, OPT_DEFAULT},
-	{1, "m", "metodo","standard", opt_metodo, OPT_DEFAULT},
+	{1, "m", "metodo","karatsuba", opt_metodo, OPT_DEFAULT},
 };
 
 //static int factor;

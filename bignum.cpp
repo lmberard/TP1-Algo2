@@ -162,6 +162,9 @@ string bignum::to_string(){
 const bignum& bignum::operator=(const bignum& right){
   if(&right !=this)
   {
+    if(this->mult==NULL){
+      this->mult=new karatsuba();
+    }
     signo=right.signo;
     if(len!=right.len)
     {
@@ -176,6 +179,9 @@ const bignum& bignum::operator=(const bignum& right){
     }
     else
     {
+      if(this->mult==NULL){
+        this->mult=new karatsuba();
+      }
       for(unsigned long i=0; i<len; i++)digits[i]=right.digits[i];
       return *this;
     }
@@ -330,6 +336,10 @@ bignum operator-(const bignum& a, const bignum& b){
 }
 
 bignum operator*(const bignum& a, const bignum& b){
+  if(a.mult==NULL){
+    cerr<<ERR_NO_MULT_INTERFACE<<endl;
+    exit(1);
+  }
   return a.mult->multiply(a,b);
 }
 

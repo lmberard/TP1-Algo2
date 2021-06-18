@@ -192,9 +192,9 @@ string operate(stack<string>& operacion, string metodo){
   }
 
   while(operacion.size()!=1){
-    res = "+0";
-    a = "+0";
-    b = "+0";
+    // res ="+0";
+    // a ="+0";
+    // b ="+0";
 
     if(contains(operacion.top(),NUMBERS)){
       aux.push(operacion.top());

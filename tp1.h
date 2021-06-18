@@ -29,7 +29,7 @@ using namespace std;
 #define METHOD_KARATSUBA "karatsuba"
 #define METHOD_STANDARD "standard"
 
-#define HELP_MSG "cmdline -p precision [-i file] [-o file]"
+#define HELP_MSG "cmdline -m method [-i file] [-o file]"
 #define CANT_OPEN_MSG "Cannot open "
 #define INVALID_METHOD_MSG "Invalid method"
 #define CANT_READ_METHOD "Cannot read method."
@@ -39,6 +39,7 @@ using namespace std;
 #define ERR_NO_EOF "No se encontro EOF en la entrada."
 #define ERR_CANT_READ_INPUT "No se pudo leer la entrada."
 #define ERR_CANT_WRITE_OUTPUT "No se pudo escribir en la salida."
+#define ERR_NO_MULT_INTERFACE "Error assigning multiplication interface"
 
 
 bool contains(string, string);
